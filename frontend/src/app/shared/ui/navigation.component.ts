@@ -10,6 +10,9 @@ import { RootRoutes } from '@root/app.routes';
   template: `
     <div class="w-full">
       <p-menubar [model]="items">
+        <ng-template #start>
+          <h1 class="text-lg font-semibold">Neptune Coding Challenge</h1>
+        </ng-template>
         <ng-template #end>
           <app-mode />
         </ng-template>

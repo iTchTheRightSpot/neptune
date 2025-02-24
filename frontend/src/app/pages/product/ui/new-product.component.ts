@@ -43,7 +43,11 @@ import { InputIcon } from 'primeng/inputicon';
             formControlName="name"
           />
         </p-iconfield>
-        <p-input-number placeholder="quantity" inputId="integeronly" formControlName="qty" />
+        <p-input-number
+          placeholder="quantity"
+          inputId="integeronly"
+          formControlName="qty"
+        />
       </div>
 
       <div class="mt-5 flex justify-end gap-2">
@@ -82,6 +86,7 @@ export class NewProductComponent {
     this.form.invalid
       ? {}
       : this.emitter.emit({
+          product_id: '',
           name: this.form.value.name || '',
           qty: Number(this.form.value.qty!!)
         });

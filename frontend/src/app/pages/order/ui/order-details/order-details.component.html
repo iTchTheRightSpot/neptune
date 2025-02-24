@@ -1,0 +1,84 @@
+@switch (obj().state) {
+  @case (state.LOADING) {
+    <div class="w-full flex items-center justify-center">
+      <p-progress-spinner ariaLabel="loading" />
+    </div>
+  }
+
+  @case (state.ERROR) {
+    <p-message severity="error">{{ obj().message }}</p-message>
+  }
+
+  @case (state.LOADED) {
+    <div class="w-full flex flex-col gap-4">
+      <h1 class="text-lg font-semibold underline">Order</h1>
+
+      <!-- qty & status -->
+      <div class="w-full gap-2 grid grid-cols-1 md:grid-cols-2">
+        <div class="w-full flex flex-col">
+          <label for="qty" class="block">Quantity</label>
+          <p-input-number
+            [disabled]="true"
+            id="qty"
+            [ngModel]="obj().data?.qty"
+            styleClass="flex-1"
+            placeholder="quantity"
+            inputId="integeronly"
+          />
+        </div>
+
+        <div class="w-full">
+          <label for="status" class="block">Status</label>
+          <p-iconfield styleClass="mb-0">
+            <p-inputicon styleClass="pi pi-user" />
+            <input
+              id="status"
+              class="w-full"
+              type="text"
+              [value]="obj().data?.status"
+              pInputText
+              [disabled]="true"
+            />
+          </p-iconfield>
+        </div>
+      </div>
+
+      <p-divider />
+
+      <h1 class="text-lg font-semibold underline">Product</h1>
+
+      <!-- name & qty -->
+      <div
+        class="w-full flex flex-col md:flex-row items-center justify-center gap-2"
+      >
+        <div class="w-full">
+          <label for="name" class="block">Name</label>
+          <p-iconfield styleClass="mb-0">
+            <input
+              id="name"
+              class="w-full"
+              type="text"
+              [value]="obj().data?.product?.name"
+              pInputText
+              [disabled]="true"
+            />
+          </p-iconfield>
+        </div>
+
+        <div class="w-full">
+          <label for="p-qty" class="block">Quantity</label>
+          <p-iconfield styleClass="mb-0">
+            <input
+              id="p-qty"
+              class="w-full"
+              type="text"
+              [value]="obj().data?.product?.qty"
+              pInputText
+              [disabled]="true"
+            />
+          </p-iconfield>
+        </div>
+      </div>
+    </div>
+  }
+}

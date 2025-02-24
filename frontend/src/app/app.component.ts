@@ -19,7 +19,7 @@ import { AsyncPipe } from '@angular/common';
         <app-navigation />
       </div>
 
-      <div class="w-full pb-2 px-1">
+      <div class="w-full pb-2 px-2 xl:px-0">
         <router-outlet />
       </div>
     </div>

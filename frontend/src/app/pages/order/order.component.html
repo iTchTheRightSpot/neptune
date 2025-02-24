@@ -1,1 +1,95 @@
-<p>order works!</p>
+<h1 class="mb-4 text-xl underline underline-offset-4">Order Component</h1>
+
+<div class="mb-4">
+  <p-button
+    type="button"
+    icon="pi pi-chevron-left"
+    (click)="first = first - rows"
+    [disabled]="orders().data ? first === 0 : true"
+    text
+  />
+  <p-button type="button" icon="pi pi-refresh" (click)="first = 0" text />
+  <p-button
+    type="button"
+    icon="pi pi-chevron-right"
+    (click)="first = first + rows"
+    [disabled]="
+      orders().data ? first + rows >= (orders().data?.length || 0) : true
+    "
+    text
+  />
+</div>
+
+<div class="card">
+  <p-table
+    [loading]="orders().state === state.LOADING"
+    [value]="orders().data || []"
+    [paginator]="true"
+    [rows]="rows"
+    [first]="first"
+    [showCurrentPageReport]="true"
+    [tableStyle]="{ 'min-width': '50rem' }"
+    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+    (onPage)="first = $event.first; rows = $event.rows"
+    [rowsPerPageOptions]="[5, 10, 15]"
+  >
+    <ng-template #header>
+      <tr>
+        @for (h of thead; track h) {
+          <th style="width: 25%">{{ h }}</th>
+        }
+      </tr>
+    </ng-template>
+    <ng-template #body let-model>
+      <tr
+        class="cursor-pointer hover:bg-primary hover:text-primary-contrast"
+        (click)="
+          orderdetail.next(model); toggleOrderDetails = !toggleOrderDetails
+        "
+      >
+        <td>{{ model.qty }}</td>
+        <td>
+          <p-badge
+            [value]="model.status"
+            [severity]="model.status ? 'success' : 'danger'"
+          />
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template #paginatorleft>
+      <p-button
+        type="button"
+        icon="pi pi-plus"
+        text
+        (click)="toggleNewOrder = !toggleNewOrder"
+      />
+    </ng-template>
+  </p-table>
+</div>
+
+<p-dialog
+  header="New Order"
+  [modal]="true"
+  [(visible)]="toggleNewOrder"
+  [style]="{ width: '40rem' }"
+>
+  @defer (when toggleNewOrder) {
+    <app-new-order
+      [products]="products()"
+      [loading]="createState().state"
+      [(visible)]="toggleNewOrder"
+      (emitter)="create.next($event)"
+    />
+  }
+</p-dialog>
+
+<p-dialog
+  header="Order Details"
+  [modal]="true"
+  [(visible)]="toggleOrderDetails"
+  [style]="{ width: '40rem' }"
+>
+  @defer (when toggleOrderDetails) {
+    <app-order-details [obj]="orderDetailState()" />
+  }
+</p-dialog>
