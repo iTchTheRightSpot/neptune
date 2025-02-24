@@ -1,0 +1,28 @@
+server:
+  port: ${PORT:8080}
+
+logging:
+  level:
+#    reactor:
+#      netty: INFO
+    org:
+      springframework:
+        cloud:
+          gateway: TRACE
+
+spring:
+  application:
+    name: gateway
+  cloud:
+    gateway:
+      httpclient:
+        wiretap: true
+#      routes:
+#        - id: ORDER-SERVICE
+#          uri: http://localhost:${ORDER_PORT:1998}
+#          predicates:
+#            - Path=/api/v1/order/**
+#        - id: INVENTORY-SERVICE
+#          uri: http://localhost:${INVENTORY_PORT:1997}
+#          predicates:
+#            - Path=/api/v1/inventory/**
