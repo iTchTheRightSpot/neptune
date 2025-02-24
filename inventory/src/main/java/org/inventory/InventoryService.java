@@ -16,13 +16,13 @@ class InventoryService {
 
     private final InventoryStore store;
 
-    public List<InventoryResponse> all() {
+    List<InventoryResponse> all() {
         final List<InventoryResponse> list = new ArrayList<>();
         store.findAll().forEach(a -> list.add(new InventoryResponse(a.uuid().toString(), a.name(), a.qty())));
         return list;
     }
 
-    public void create(final InventoryPayload dto) {
+    void create(final InventoryPayload dto) {
         try {
             store.save(new Inventory(UUID.randomUUID(), dto.name().trim(), dto.qty()));
         } catch (final Exception e) {
@@ -30,7 +30,7 @@ class InventoryService {
         }
     }
 
-    public InventoryResponse inventoryById(final String productId) {
+    InventoryResponse inventoryById(final String productId) {
         final UUID uuid;
         try {
             uuid = UUID.fromString(productId.trim());

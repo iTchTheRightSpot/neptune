@@ -38,5 +38,10 @@ jobs:
           cd inventory/
           mvn clean test
 
+      - name: Order tests
+        run: |
+          cd order/
+          mvn clean test
+
       - name: Docker compose down
         run: docker stop pg

@@ -1,0 +1,33 @@
+server:
+  port: ${ORDER_PORT:1998}
+  error:
+    include-binding-errors: always
+    include-message: always
+    include-stacktrace: on_param
+
+logging:
+  level:
+    org:
+      springframework:
+        jdbc: trace
+
+spring:
+  application:
+    name: order
+  threads:
+    virtual:
+      enabled: true
+  sql:
+    init:
+      schema-locations: classpath*:db/schema.sql
+      mode: always
+  profiles:
+    active: ${PROFILE:default}
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/neptune_db?sslmode=disable}
+    username: ${DB_USERNAME:neptune}
+    password: ${DB_PASSWORD:neptune}
+    driver-class-name: org.postgresql.Driver
+
+route:
+  prefix: api/v1/

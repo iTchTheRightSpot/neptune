@@ -1,4 +1,4 @@
-package org.inventory;
+package org.order;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +8,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
 @AutoConfigureMockMvc
-//@TestPropertySource(locations = "classpath:application.yml")
 @ActiveProfiles("test")
 @Transactional
 abstract class AbstractIntegration {
