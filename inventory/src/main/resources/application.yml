@@ -1,0 +1,13 @@
+database: h2
+spring:
+  application:
+    name: inventory
+  sql:
+    init:
+      schema-locations=classpath*:db/${database}/schema.sql
+      data-locations=classpath*:db/${database}/data.sql
+
+logging:
+  level:
+    org:
+      springframework=INFO: INFO
