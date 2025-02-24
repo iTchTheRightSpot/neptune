@@ -31,8 +31,3 @@ build/
 
 ### VS Code ###
 .vscode/
-
-inventory.iml
-inventory.ipr
-inventory.iws
-src/main/main.iml
