@@ -1,0 +1,66 @@
+<form [formGroup]="form" class="w-full flex flex-col gap-4">
+  <!-- product -->
+  <div class="w-full">
+    <label for="product" class="block">Product</label>
+    <p-select
+      formControlName="product"
+      id="product"
+      appendTo="body"
+      [loading]="products().state === state.LOADING"
+      [options]="products().data || []"
+      optionLabel="name"
+      [filter]="true"
+      filterBy="name"
+      [showClear]="true"
+      placeholder="select a product"
+      class="w-full"
+    >
+      <ng-template #selectedItem let-selected>
+        <div>{{ selected.name }}</div>
+      </ng-template>
+      <ng-template let-product #item>
+        <div>{{ product.name }}</div>
+      </ng-template>
+    </p-select>
+  </div>
+
+  <!-- qty & status -->
+  <div class="w-full gap-2 grid grid-cols-1 md:grid-cols-2">
+    <div class="w-full flex flex-col">
+      <label for="qty" class="block">Quantity</label>
+      <p-input-number
+        id="qty"
+        styleClass="flex-1"
+        placeholder="quantity"
+        inputId="integeronly"
+        formControlName="qty"
+      />
+    </div>
+
+    <div class="w-full">
+      <label for="status" class="block">Status</label>
+      <p-select
+        appendTo="body"
+        formControlName="status"
+        id="status"
+        placeholder="select a product"
+        [options]="[true, false]"
+        class="w-full"
+      />
+    </div>
+  </div>
+
+  <!--btns -->
+  <div class="flex justify-end gap-2">
+    <p-button
+      label="Cancel"
+      severity="secondary"
+      (click)="visible.set(false)"
+    />
+    <p-button
+      label="Create"
+      (click)="submit()"
+      [disabled]="form.invalid || loading() === state.LOADING"
+    />
+  </div>
+</form>
