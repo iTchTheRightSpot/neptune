@@ -1,5 +1,0 @@
-PROFILE: local
-spring:
-  sql:
-    init:
-      data-locations: classpath*:db/data.sql

@@ -20,9 +20,10 @@ spring:
   sql:
     init:
       schema-locations: classpath*:db/schema.sql
+      data-locations: classpath*:db/data.sql
       mode: always
   profiles:
-    active: ${PROFILE:local}
+    active: ${PROFILE:default}
   datasource:
     url: ${DB_URL:jdbc:postgresql://localhost:5432/neptune_db?sslmode=disable}
     username: ${DB_USERNAME:neptune}

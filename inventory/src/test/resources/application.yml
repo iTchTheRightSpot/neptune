@@ -3,6 +3,11 @@ PROFILE: test
 spring:
   profiles:
     active: ${PROFILE}
+  sql:
+    init:
+      schema-locations: classpath*:db/schema.sql
+      data-locations: classpath*:db/data.sql
+      mode: always
   datasource:
     url: jdbc:postgresql://localhost:5432/neptune_db?sslmode=disable
     username: neptune
