@@ -25,7 +25,7 @@ class InventoryHandler {
 
     @ResponseStatus(OK)
     @GetMapping(path = "/{product_id}", produces = APPLICATION_JSON_VALUE)
-    InventoryResponse inventoryById(@PathVariable("product_id") String productId) {
+    InventoryResponse inventoryById(@PathVariable("product_id") final String productId) {
         return service.inventoryById(productId);
     }
 

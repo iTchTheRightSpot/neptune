@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 @AutoConfigureMockMvc
 @TestPropertySource(locations = "classpath:application.yml")
 @Transactional
-abstract class AbstractIntegration extends SuperAbstract {
+abstract class AbstractIntegration {
     @Autowired
     protected MockMvc mockmvc;
     @Autowired

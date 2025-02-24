@@ -36,7 +36,7 @@ jobs:
       - name: Inventory tests
         run: |
           cd inventory/
-          mvn clean test -DCI_PROFILE=true
+          mvn clean test
 
       - name: Docker compose down
         run: docker stop pg

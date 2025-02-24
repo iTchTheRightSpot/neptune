@@ -4,9 +4,9 @@ spring:
   profiles:
     active: ${PROFILE}
   datasource:
-    url: ${DB_URL:jdbc:postgresql://localhost:5432/neptune_db?sslmode=disable}
-    username: ${DB_USERNAME:neptune}
-    password: ${DB_PASSWORD:neptune}
+    url: jdbc:postgresql://localhost:5432/neptune_db?sslmode=disable
+    username: neptune
+    password: neptune
 
 route:
   prefix: api/v1/
