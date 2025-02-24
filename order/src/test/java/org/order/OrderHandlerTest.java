@@ -25,7 +25,7 @@ final class OrderHandlerTest extends AbstractIntegration {
     @Value("/${route.prefix}order")
     private String prefix;
 
-    private final short qty = 10;
+    private final short qty = 5;
 
     @Autowired
     private OrderStore store;
@@ -50,7 +50,7 @@ final class OrderHandlerTest extends AbstractIntegration {
 
     @Test
     void shouldCreateOrder() throws Exception {
-        final String content = super.mapper.writeValueAsString(new OrderPayload("uuid", qty, PENDING));
+        final String content = super.mapper.writeValueAsString(new OrderPayload(UUID.randomUUID().toString(), qty, PENDING));
         super.mockmvc.perform(post(prefix).contentType(APPLICATION_JSON).content(content))
                 .andExpect(status().isCreated());
     }

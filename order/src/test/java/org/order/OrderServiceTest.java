@@ -49,7 +49,6 @@ final class OrderServiceTest {
         verify(inventoryService, times(0)).inventoryByUUID(any(UUID.class));
     }
 
-
     @Test
     void rejectCreation_ThrowNotFound_ProductNotFound() {
         // given
