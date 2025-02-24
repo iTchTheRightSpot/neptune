@@ -1,0 +1,42 @@
+name: Test & Build
+on:
+  push:
+    branches:
+      - '**'
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  test:
+    name: Build and Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK Temurin
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '23'
+          cache: 'maven'
+
+      - name: Docker compose up
+        run: |
+          docker run --name pg \
+          -p 5432:5432 \
+          --expose 5432 \
+          -e POSTGRES_DB=neptune_db \
+          -e POSTGRES_USER=neptune \
+          -e POSTGRES_PASSWORD=neptune \
+          -d postgres:15.6
+
+      - name: Inventory tests
+        run: |
+          cd inventory/
+          mvn clean test -DCI_PROFILE=true
+
+      - name: Docker compose down
+        run: docker stop pg

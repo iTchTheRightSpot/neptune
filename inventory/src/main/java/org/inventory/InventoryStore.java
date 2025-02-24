@@ -5,8 +5,9 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 
 import java.util.Optional;
+import java.util.UUID;
 
 interface InventoryStore extends CrudRepository<Inventory, Integer> {
     @Query("SELECT * FROM inventory WHERE uuid = :id")
-    Optional<Inventory> inventoryByUUID(@Param("id") final String uuid);
+    Optional<Inventory> inventoryByUUID(@Param("id") final UUID uuid);
 }

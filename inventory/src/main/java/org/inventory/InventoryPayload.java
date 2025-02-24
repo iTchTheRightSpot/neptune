@@ -13,12 +13,12 @@ record InventoryPayload(
         @Size.List({@Size(min = 1), @Size(max = 50)})
         String name,
         @NotNull
-        Integer qty
+        Short qty
 ) {}
 
 record InventoryResponse(
         @JsonProperty("product_id")
         String productId,
         String name,
-        int qty
+        short qty
 ) {}

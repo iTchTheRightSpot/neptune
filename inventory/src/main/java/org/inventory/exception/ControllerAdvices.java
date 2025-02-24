@@ -1,5 +1,7 @@
 package org.inventory.exception;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
@@ -17,6 +19,8 @@ import static org.springframework.http.HttpStatus.BAD_REQUEST;
 @ControllerAdvice
 @Order(Ordered.HIGHEST_PRECEDENCE)
 class ControllerAdvices {
+
+    private static final Logger log = LoggerFactory.getLogger(ControllerAdvices.class);
 
     public record ExceptionResponse(String message, HttpStatus status) {}
 
@@ -52,4 +56,15 @@ class ControllerAdvices {
         return new ResponseEntity<>(new ExceptionResponse(message, BAD_REQUEST), BAD_REQUEST);
     }
 
+    @ExceptionHandler(BadRequestException.class)
+    public ResponseEntity<ExceptionResponse> runtimeException(final BadRequestException ex) {
+        final String message = ex.getCause() != null ? FORMAT.apply(ex.getCause().getClass(), ex.getMessage()) : ex.getMessage();
+        return new ResponseEntity<>(new ExceptionResponse(message, BAD_REQUEST), BAD_REQUEST);
+    }
+
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<ExceptionResponse> runtimeException(final RuntimeException ex) {
+        log.error(ex.getMessage(), ex);
+        return new ResponseEntity<>(new ExceptionResponse("checked exception error", HttpStatus.INTERNAL_SERVER_ERROR), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 }

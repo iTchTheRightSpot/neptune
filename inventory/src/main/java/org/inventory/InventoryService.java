@@ -1,6 +1,7 @@
 package org.inventory;
 
 import lombok.RequiredArgsConstructor;
+import org.inventory.exception.BadRequestException;
 import org.inventory.exception.InsertionException;
 import org.inventory.exception.NotFoundException;
 import org.springframework.stereotype.Service;
@@ -30,7 +31,14 @@ class InventoryService {
     }
 
     public InventoryResponse inventoryById(final String productId) {
-        return store.inventoryByUUID(productId.trim())
+        final UUID uuid;
+        try {
+            uuid = UUID.fromString(productId.trim());
+        } catch (final IllegalArgumentException e) {
+            throw new BadRequestException();
+        }
+
+        return store.inventoryByUUID(uuid)
                 .map(inventory -> new InventoryResponse(inventory.uuid().toString(), inventory.name(), inventory.qty()))
                 .orElseThrow(NotFoundException::new);
     }
