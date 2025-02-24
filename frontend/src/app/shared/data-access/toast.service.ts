@@ -31,7 +31,7 @@ export class ToastService {
       concat(
         of(obj),
         timer(5000).pipe(
-          concatMap(() => of({ state: ToastEnum.NONE, message: '' } as IToast))
+          concatMap(() => of({ state: ToastEnum.NONE, message: '' }))
         )
       )
     )

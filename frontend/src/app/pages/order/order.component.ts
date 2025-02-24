@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { ApiResponse, ApiState } from '@shared/model/shared.model';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { Subject, switchMap } from 'rxjs';
+import { Subject, switchMap, tap } from 'rxjs';
 import { OrderService } from './order.service';
 import { IOrderDetailsModel, IOrderModel } from '@order/order.model';
 import { Button } from 'primeng/button';
@@ -12,6 +12,7 @@ import { OrderDetailsComponent } from './ui/order-details/order-details.componen
 import { Badge } from 'primeng/badge';
 import { ProductService } from '@product/product.service';
 import { IProductModel } from '@product/product.model';
+import { ToastEnum, ToastService } from '@shared/data-access/toast.service';
 
 @Component({
   selector: 'app-order',
@@ -29,6 +30,7 @@ import { IProductModel } from '@product/product.model';
 export class OrderComponent {
   private readonly service = inject(OrderService);
   private readonly productService = inject(ProductService);
+  private readonly toast = inject(ToastService);
 
   protected first = 0;
   protected rows = 5;
@@ -37,33 +39,76 @@ export class OrderComponent {
   protected toggleNewOrder = false;
   protected toggleOrderDetails = false;
 
-  protected readonly products = toSignal(this.productService.all(), {
-    initialValue: <ApiResponse<IProductModel[]>>{
-      state: ApiState.LOADING,
-      data: []
+  protected readonly products = toSignal(
+    this.productService.all().pipe(
+      tap(s => {
+        if (s.state === ApiState.ERROR)
+          this.toast.message({
+            message: s.message || 'error occurred',
+            state: ToastEnum.ERROR
+          });
+      })
+    ),
+    {
+      initialValue: <ApiResponse<IProductModel[]>>{
+        state: ApiState.LOADING,
+        data: []
+      }
     }
-  });
+  );
 
   protected readonly orderdetail = new Subject<IOrderModel>();
   protected readonly orderDetailState = toSignal(
-    this.orderdetail
-      .asObservable()
-      .pipe(switchMap(o => this.service.orderdetail(o))),
+    this.orderdetail.asObservable().pipe(
+      switchMap(o => this.service.orderdetail(o)),
+      tap(s => {
+        if (s.state === ApiState.ERROR)
+          this.toast.message({
+            message: s.message || 'error occurred',
+            state: ToastEnum.ERROR
+          });
+      })
+    ),
     {
       initialValue: <ApiResponse<IOrderDetailsModel>>{ state: ApiState.LOADING }
     }
   );
 
-  protected readonly orders = toSignal(this.service.all(), {
-    initialValue: <ApiResponse<IOrderModel[]>>{
-      state: ApiState.LOADING,
-      data: []
+  protected readonly orders = toSignal(
+    this.service.all().pipe(
+      tap(s => {
+        if (s.state === ApiState.ERROR)
+          this.toast.message({
+            message: s.message || 'error occurred',
+            state: ToastEnum.ERROR
+          });
+      })
+    ),
+    {
+      initialValue: <ApiResponse<IOrderModel[]>>{
+        state: ApiState.LOADING,
+        data: []
+      }
     }
-  });
+  );
 
   protected readonly create = new Subject<IOrderModel>();
   protected readonly createState = toSignal(
-    this.create.asObservable().pipe(switchMap(o => this.service.create(o))),
+    this.create.asObservable().pipe(
+      switchMap(o => this.service.create(o)),
+      tap(s => {
+        if (s.state === ApiState.LOADED)
+          this.toast.message({
+            message: 'product created',
+            state: ToastEnum.SUCCESS
+          });
+        else if (s.state === ApiState.ERROR)
+          this.toast.message({
+            message: s.message || 'error occurred',
+            state: ToastEnum.ERROR
+          });
+      })
+    ),
     { initialValue: <ApiResponse<any>>{ state: ApiState.LOADED } }
   );
 }

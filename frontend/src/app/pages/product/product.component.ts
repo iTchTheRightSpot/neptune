@@ -5,9 +5,10 @@ import { Dialog } from 'primeng/dialog';
 import { NewProductComponent } from './ui/new-product.component';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { IProductModel } from './product.model';
-import { Subject, switchMap } from 'rxjs';
+import { Subject, switchMap, tap } from 'rxjs';
 import { Button } from 'primeng/button';
 import { TableModule } from 'primeng/table';
+import { ToastEnum, ToastService } from '@shared/data-access/toast.service';
 
 @Component({
   selector: 'app-product',
@@ -17,6 +18,7 @@ import { TableModule } from 'primeng/table';
 })
 export class ProductComponent {
   private readonly service = inject(ProductService);
+  private readonly toast = inject(ToastService);
 
   protected first = 0;
   protected rows = 5;
@@ -24,16 +26,41 @@ export class ProductComponent {
   protected readonly thead = ['Name', 'Quantity'];
   protected toggleNewProduct = false;
 
-  protected readonly products = toSignal(this.service.all(), {
-    initialValue: <ApiResponse<IProductModel[]>>{
-      state: ApiState.LOADING,
-      data: []
+  protected readonly products = toSignal(
+    this.service.all().pipe(
+      tap(s => {
+        if (s.state === ApiState.ERROR)
+          this.toast.message({
+            message: s.message || 'error occurred',
+            state: ToastEnum.ERROR
+          });
+      })
+    ),
+    {
+      initialValue: <ApiResponse<IProductModel[]>>{
+        state: ApiState.LOADING,
+        data: []
+      }
     }
-  });
+  );
 
   protected readonly create = new Subject<IProductModel>();
   protected readonly createState = toSignal(
-    this.create.asObservable().pipe(switchMap(o => this.service.create(o))),
+    this.create.asObservable().pipe(
+      switchMap(o => this.service.create(o)),
+      tap(s => {
+        if (s.state === ApiState.LOADED)
+          this.toast.message({
+            message: 'product created',
+            state: ToastEnum.SUCCESS
+          });
+        else if (s.state === ApiState.ERROR)
+          this.toast.message({
+            message: s.message || 'error occurred',
+            state: ToastEnum.ERROR
+          });
+      })
+    ),
     { initialValue: <ApiResponse<any>>{ state: ApiState.LOADED } }
   );
 }
