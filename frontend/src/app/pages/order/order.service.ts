@@ -48,7 +48,10 @@ export class OrderService {
                 product: p
               };
               this.orderDetailCache.push({ key: o.product_id, data: d });
-              return { state: ApiState.LOADED, data: d };
+              return <ApiResponse<IOrderDetailsModel>>{
+                state: ApiState.LOADED,
+                data: d
+              };
             }),
             startWith(<ApiResponse<IOrderDetailsModel>>{
               state: ApiState.LOADING

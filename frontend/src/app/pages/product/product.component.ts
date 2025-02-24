@@ -26,12 +26,23 @@ export class ProductComponent {
   protected readonly thead = ['Name', 'Quantity'];
   protected toggleNewProduct = false;
 
-  protected readonly products = toSignal(this.service.all(), {
-    initialValue: <ApiResponse<IProductModel[]>>{
-      state: ApiState.LOADING,
-      data: []
+  protected readonly products = toSignal(
+    this.service.all().pipe(
+      tap(s => {
+        if (s.state === ApiState.ERROR)
+          this.toast.message({
+            message: s.message || 'error occurred',
+            state: ToastEnum.ERROR
+          });
+      })
+    ),
+    {
+      initialValue: <ApiResponse<IProductModel[]>>{
+        state: ApiState.LOADING,
+        data: []
+      }
     }
-  });
+  );
 
   protected readonly create = new Subject<IProductModel>();
   protected readonly createState = toSignal(
@@ -42,6 +53,11 @@ export class ProductComponent {
           this.toast.message({
             message: 'product created',
             state: ToastEnum.SUCCESS
+          });
+        else if (s.state === ApiState.ERROR)
+          this.toast.message({
+            message: s.message || 'error occurred',
+            state: ToastEnum.ERROR
           });
       })
     ),

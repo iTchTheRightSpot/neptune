@@ -39,29 +39,58 @@ export class OrderComponent {
   protected toggleNewOrder = false;
   protected toggleOrderDetails = false;
 
-  protected readonly products = toSignal(this.productService.all(), {
-    initialValue: <ApiResponse<IProductModel[]>>{
-      state: ApiState.LOADING,
-      data: []
+  protected readonly products = toSignal(
+    this.productService.all().pipe(
+      tap(s => {
+        if (s.state === ApiState.ERROR)
+          this.toast.message({
+            message: s.message || 'error occurred',
+            state: ToastEnum.ERROR
+          });
+      })
+    ),
+    {
+      initialValue: <ApiResponse<IProductModel[]>>{
+        state: ApiState.LOADING,
+        data: []
+      }
     }
-  });
+  );
 
   protected readonly orderdetail = new Subject<IOrderModel>();
   protected readonly orderDetailState = toSignal(
-    this.orderdetail
-      .asObservable()
-      .pipe(switchMap(o => this.service.orderdetail(o))),
+    this.orderdetail.asObservable().pipe(
+      switchMap(o => this.service.orderdetail(o)),
+      tap(s => {
+        if (s.state === ApiState.ERROR)
+          this.toast.message({
+            message: s.message || 'error occurred',
+            state: ToastEnum.ERROR
+          });
+      })
+    ),
     {
       initialValue: <ApiResponse<IOrderDetailsModel>>{ state: ApiState.LOADING }
     }
   );
 
-  protected readonly orders = toSignal(this.service.all(), {
-    initialValue: <ApiResponse<IOrderModel[]>>{
-      state: ApiState.LOADING,
-      data: []
+  protected readonly orders = toSignal(
+    this.service.all().pipe(
+      tap(s => {
+        if (s.state === ApiState.ERROR)
+          this.toast.message({
+            message: s.message || 'error occurred',
+            state: ToastEnum.ERROR
+          });
+      })
+    ),
+    {
+      initialValue: <ApiResponse<IOrderModel[]>>{
+        state: ApiState.LOADING,
+        data: []
+      }
     }
-  });
+  );
 
   protected readonly create = new Subject<IOrderModel>();
   protected readonly createState = toSignal(
@@ -72,6 +101,11 @@ export class OrderComponent {
           this.toast.message({
             message: 'product created',
             state: ToastEnum.SUCCESS
+          });
+        else if (s.state === ApiState.ERROR)
+          this.toast.message({
+            message: s.message || 'error occurred',
+            state: ToastEnum.ERROR
           });
       })
     ),
