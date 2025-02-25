@@ -13,7 +13,7 @@ import {
 } from 'rxjs';
 import { ApiResponse, ApiState, err } from '@shared/model/shared.model';
 import { DummyOrders, IOrderDetailsModel, IOrderModel } from './order.model';
-import { DummyProducts, IProductModel } from '@product/product.model';
+import { DummyInventories, IInventoryModel } from '@pages/inventory/inventory.model';
 
 @Injectable({
   providedIn: 'root'
@@ -38,7 +38,7 @@ export class OrderService {
 
     return environment.production
       ? this.http
-          .get<IProductModel>(`${environment.domain}product/${o.product_id}`)
+          .get<IInventoryModel>(`${environment.domain}inventory/${o.product_id}`)
           .pipe(
             map(p => {
               const d: IOrderDetailsModel = {
@@ -66,7 +66,7 @@ export class OrderService {
               order_id: o.order_id,
               status: o.status,
               qty: o.qty,
-              product: DummyProducts(1)[0]
+              product: DummyInventories(1)[0]
             }
           }).pipe(delay(2000))
         );

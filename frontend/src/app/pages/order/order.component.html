@@ -75,7 +75,7 @@
 >
   @defer (when toggleNewOrder) {
     <app-new-order
-      [products]="products()"
+      [products]="inventories()"
       [loading]="createState().state"
       [(visible)]="toggleNewOrder"
       (emitter)="create.next($event)"

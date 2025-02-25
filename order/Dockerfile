@@ -12,6 +12,6 @@ FROM eclipse-temurin:23
 
 WORKDIR /
 
-COPY --from=build /target/order-0.0.1-SNAPSHOT.jar /app.jar
+COPY --from=build /target/order.jar /order.jar
 
-CMD ["java", "-jar", "/app.jar"]
+CMD ["java", "-jar", "/order.jar"]

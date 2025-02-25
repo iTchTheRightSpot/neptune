@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+option java_package = "org.inventory.order";
+option java_outer_classname = "OrderProto";
+
+service OrderService {
+  rpc CreateOrder(OrderRequest) returns (OrderResponse);
+}
+message OrderRequest {
+  string product = 1;
+  int32 quantity = 2;
+}
+message OrderResponse {
+  string status = 1;
+}

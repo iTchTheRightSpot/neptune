@@ -12,6 +12,6 @@ FROM eclipse-temurin:23
 
 WORKDIR /
 
-COPY --from=build /target/inventory-0.0.1-SNAPSHOT.jar /app.jar
+COPY --from=build /target/inventory.jar /inventory.jar
 
-CMD ["java", "-jar", "/app.jar"]
+CMD ["java", "-jar", "/inventory.jar"]

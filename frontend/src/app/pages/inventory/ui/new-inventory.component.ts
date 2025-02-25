@@ -7,7 +7,7 @@ import {
   output
 } from '@angular/core';
 import { ApiState } from '@shared/model/shared.model';
-import { IProductModel } from '@product/product.model';
+import { IInventoryModel } from '@pages/inventory/inventory.model';
 import {
   FormBuilder,
   FormControl,
@@ -21,7 +21,7 @@ import { IconField } from 'primeng/iconfield';
 import { InputIcon } from 'primeng/inputicon';
 
 @Component({
-  selector: 'app-new-product',
+  selector: 'app-new-inventory',
   imports: [
     Button,
     ReactiveFormsModule,
@@ -66,14 +66,14 @@ import { InputIcon } from 'primeng/inputicon';
   `,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class NewProductComponent {
+export class NewInventoryComponent {
   loading = input.required<ApiState>();
   visible = model.required<boolean>();
-  readonly emitter = output<IProductModel>();
+  readonly emitter = output<IInventoryModel>();
 
   protected readonly state = ApiState;
 
-  protected form = inject(FormBuilder).group({
+  protected readonly form = inject(FormBuilder).group({
     name: new FormControl<string>('', [
       Validators.required,
       Validators.minLength(1),
