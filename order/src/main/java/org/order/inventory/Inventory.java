@@ -6,5 +6,4 @@ import lombok.Builder;
 import java.util.UUID;
 
 @Builder
-public record Inventory(String name, @JsonProperty("product_id") UUID productId, short qty) {
-}
+public record Inventory(String name, @JsonProperty("product_id") UUID productId, short qty) {}

@@ -28,6 +28,10 @@ class Inventory {
                 this(null, uuid, name, qty);
         }
 
+        public Integer inventoryId() {
+                return inventoryId;
+        }
+
         public UUID uuid() {
                 return uuid;
         }

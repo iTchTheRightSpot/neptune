@@ -5,12 +5,24 @@ option java_outer_classname = "InventoryProto";
 
 service InventoryService {
   rpc EmitInventoryDetail(InventoryRequest) returns (InventoryResponse);
+  rpc CreateOrder(OrderRequest) returns (OrderResponse);
 }
+
 message InventoryRequest {
-  string product_id = 1;
+  string productId = 1;
 }
+
 message InventoryResponse {
-  string product_id = 1;
+  string productId = 1;
   string name = 2;
   int32 qty = 3;
+}
+
+message OrderRequest {
+  string productId = 1;
+  int32 qty = 2;
+}
+
+message OrderResponse {
+  bool status = 1;
 }
