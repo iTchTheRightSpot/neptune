@@ -6,7 +6,7 @@ COPY pom.xml pom.xml
 COPY .mvn/ .mvn/
 COPY ./src src/
 
-RUN mvn clean install -DskipTests
+RUN mvn clean package -DskipTests
 
 FROM eclipse-temurin:23
 
