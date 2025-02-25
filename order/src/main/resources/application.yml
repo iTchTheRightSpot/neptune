@@ -31,3 +31,7 @@ spring:
 
 route:
   prefix: api/v1/
+
+grpc:
+  inventory:
+    port: ${INVENTORY_ORDER_PORT:9090}

@@ -19,7 +19,6 @@ import java.util.UUID;
 class InventoryService extends InventoryServiceGrpc.InventoryServiceImplBase {
     private static final Logger logger = LoggerFactory.getLogger(InventoryService.class);
 
-
     private final InventoryStore store;
 
     List<InventoryResponse> all() {
