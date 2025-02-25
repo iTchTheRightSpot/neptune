@@ -2,7 +2,7 @@ name: Test & Build
 on:
   push:
     branches:
-      - master
+      - backend
 #      - '**'
   pull_request:
     branches:
@@ -43,6 +43,11 @@ jobs:
         run: |
           cd order/
           mvn clean test
+
+      - name: Backend e2e test
+        run: |
+          javac main.java
+          java main.java
 
       - name: Docker compose down
         run: docker stop pg
