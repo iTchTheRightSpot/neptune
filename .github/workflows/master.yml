@@ -2,11 +2,11 @@ name: Test & Build
 on:
   push:
     branches:
-      - master
-#      - '**'
+      - backend
   pull_request:
     branches:
       - master
+      - backend
 
 jobs:
   test:
@@ -24,7 +24,7 @@ jobs:
           java-version: '23'
           cache: 'maven'
 
-      - name: Docker compose up
+      - name: Docker run
         run: |
           docker run --name pg \
           -p 5432:5432 \
@@ -44,5 +44,20 @@ jobs:
           cd order/
           mvn clean test
 
-      - name: Docker compose down
+      - name: Docker stop
         run: docker stop pg
+
+      - name: Create .env
+        run: |
+          echo -e "DB_NAME=neptune_db\nDB_HOST_PORT=5431\nDB_URL='jdbc:postgresql://database:5432/neptune_db?sslmode=disable'\nDB_USERNAME=neptune\nDB_PASSWORD=neptune\n\n# gateway\nGATEWAY_PORT=8080\nGATEWAY_ORDER_ROUTE=http://order:1998\nGATEWAY_INVENTORY_ROUTE=http://inventory:1997\n\n# order\nORDER_PORT=1998\nORDER_PROFILE=default\nGRPC_CLIENT_ADDRESS=inventory:9090\n\n# inventory\nINVENTORY_PORT=1997\nINVENTORY_PROFILE=e2e\nGRPC_SERVER_PORT=9090" > .env
+
+      - name: Compose up
+        run: docker compose -f compose-gateway.yml up -d
+
+      - name: e2e test
+        run: |
+          javac main.java
+          java main.java 8080
+
+      - name: Compose down
+        run: docker compose down -v

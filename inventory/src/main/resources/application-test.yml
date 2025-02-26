@@ -1,4 +1,5 @@
-PROFILE: test
+INVENTORY_PROFILE: test
 DB_URL: jdbc:postgresql://localhost:5432/neptune_db?sslmode=disable
 DB_USERNAME: neptune
 DB_PASSWORD: neptune
+GRPC_SERVER_PORT: 5050

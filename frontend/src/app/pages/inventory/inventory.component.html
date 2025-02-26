@@ -5,7 +5,7 @@
     type="button"
     icon="pi pi-chevron-left"
     (click)="first = first - rows"
-    [disabled]="products().data ? first === 0 : true"
+    [disabled]="inventories().data ? first === 0 : true"
     text
   />
   <p-button type="button" icon="pi pi-refresh" (click)="first = 0" text />
@@ -14,7 +14,7 @@
     icon="pi pi-chevron-right"
     (click)="first = first + rows"
     [disabled]="
-      products().data ? first + rows >= (products().data?.length || 0) : true
+      inventories().data ? first + rows >= (inventories().data?.length || 0) : true
     "
     text
   />
@@ -22,8 +22,8 @@
 
 <div class="card">
   <p-table
-    [loading]="products().state === state.LOADING"
-    [value]="products().data || []"
+    [loading]="inventories().state === state.LOADING"
+    [value]="inventories().data || []"
     [paginator]="true"
     [rows]="rows"
     [first]="first"
@@ -64,7 +64,7 @@
   [style]="{ width: '40rem' }"
 >
   @defer (when toggleNewProduct) {
-    <app-new-product
+    <app-new-inventory
       [loading]="createState().state"
       [(visible)]="toggleNewProduct"
       (emitter)="create.next($event)"

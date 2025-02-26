@@ -1,11 +1,16 @@
 package org.order;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
@@ -18,17 +23,25 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+
+@AutoConfigureMockMvc
+@ActiveProfiles("test")
+@Transactional
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Import(TestConfig.class)
-final class OrderHandlerTest extends AbstractIntegration {
+class OrderHandlerTest {
+
+    @Autowired
+    protected MockMvc mockmvc;
+    @Autowired
+    protected ObjectMapper mapper;
+    @Autowired
+    private OrderStore store;
 
     @Value("/${route.prefix}order")
     private String prefix;
 
     private final short qty = 5;
-
-    @Autowired
-    private OrderStore store;
 
     @BeforeEach
     void setUp() {
@@ -38,7 +51,7 @@ final class OrderHandlerTest extends AbstractIntegration {
 
     @Test
     void shouldReturnAllOrders() throws Exception {
-        super.mockmvc.perform(get(prefix))
+        mockmvc.perform(get(prefix))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("*").isNotEmpty())
                 .andExpect(jsonPath("*").isArray())
@@ -50,9 +63,8 @@ final class OrderHandlerTest extends AbstractIntegration {
 
     @Test
     void shouldCreateOrder() throws Exception {
-        final String content = super.mapper.writeValueAsString(new OrderPayload(UUID.randomUUID().toString(), qty, PENDING));
-        super.mockmvc.perform(post(prefix).contentType(APPLICATION_JSON).content(content))
-                .andExpect(status().isCreated());
+        final String content = mapper.writeValueAsString(new OrderRequestPayload(UUID.randomUUID().toString(), qty, PENDING));
+        mockmvc.perform(post(prefix).contentType(APPLICATION_JSON).content(content)).andExpect(status().isCreated());
     }
 
 }

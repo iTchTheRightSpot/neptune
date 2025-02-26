@@ -13,7 +13,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Setter
-class Inventory {
+public class Inventory {
         @Id
         @Column("inventory_id")
         private Integer inventoryId;

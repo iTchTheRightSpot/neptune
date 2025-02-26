@@ -1,10 +1,13 @@
 package org.inventory;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.UUID;
 
@@ -16,12 +19,18 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-final class InventoryHandlerTest extends AbstractIntegration {
-    @Value("/${route.prefix}inventory")
-    private String prefix;
+@AutoConfigureMockMvc
+final class InventoryHandlerTest extends TestAbstract {
 
     @Autowired
+    private MockMvc mockmvc;
+    @Autowired
+    private ObjectMapper mapper;
+    @Autowired
     private InventoryStore store;
+
+    @Value("/${route.prefix}inventory")
+    private String prefix;
 
     private Inventory inventory;
     private final short qty = 10;
@@ -30,11 +39,15 @@ final class InventoryHandlerTest extends AbstractIntegration {
     void setUp() {
         final var uuid = UUID.randomUUID();
         inventory = store.save(new Inventory(uuid, uuid.toString(), qty));
+        final var uuid1 = UUID.randomUUID();
+        store.save(new Inventory(uuid1, uuid1.toString(), qty));
+        final var uuid2 = UUID.randomUUID();
+        store.save(new Inventory(uuid2, uuid2.toString(), qty));
     }
 
     @Test
     void shouldReturnAllInventories() throws Exception {
-        super.mockmvc.perform(get(prefix + "/all"))
+        mockmvc.perform(get(prefix + "/all"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("*").isNotEmpty())
                 .andExpect(jsonPath("*").isArray())
@@ -46,14 +59,14 @@ final class InventoryHandlerTest extends AbstractIntegration {
 
     @Test
     void shouldCreateInventory() throws Exception {
-        final String content = super.mapper.writeValueAsString(new InventoryPayload("uuid", qty));
-        super.mockmvc.perform(post(prefix).contentType(APPLICATION_JSON).content(content))
-                .andExpect(status().isCreated());
+        final String content = mapper.writeValueAsString(new InventoryRequestPayload("uuid", qty));
+
+        mockmvc.perform(post(prefix).contentType(APPLICATION_JSON).content(content)).andExpect(status().isCreated());
     }
 
     @Test
     void shouldReturnInventoryByUUID() throws Exception {
-        super.mockmvc.perform(get(prefix + "/" + inventory.uuid().toString()))
+        mockmvc.perform(get(prefix + "/" + inventory.uuid().toString()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").isNotEmpty())
                 .andExpect(jsonPath("$.product_id", is(inventory.uuid().toString())))
@@ -63,7 +76,7 @@ final class InventoryHandlerTest extends AbstractIntegration {
 
     @Test
     void shouldReturnError_InvalidInventoryByUUID() throws Exception {
-        super.mockmvc.perform(get(prefix + "/invalid")).andExpect(status().isBadRequest());
+        mockmvc.perform(get(prefix + "/invalid")).andExpect(status().isBadRequest());
     }
 
 }

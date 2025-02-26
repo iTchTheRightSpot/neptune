@@ -19,19 +19,19 @@ class InventoryHandler {
 
     @ResponseStatus(OK)
     @GetMapping(path = "/all", produces = APPLICATION_JSON_VALUE)
-    List<InventoryResponse> all() {
+    List<InventoryResponsePayload> all() {
         return service.all();
     }
 
     @ResponseStatus(OK)
     @GetMapping(path = "/{product_id}", produces = APPLICATION_JSON_VALUE)
-    InventoryResponse inventoryById(@PathVariable("product_id") final String productId) {
+    InventoryResponsePayload inventoryById(@PathVariable("product_id") final String productId) {
         return service.inventoryById(productId);
     }
 
     @ResponseStatus(CREATED)
     @PostMapping(consumes = APPLICATION_JSON_VALUE)
-    void create(@Valid @RequestBody final InventoryPayload dto) {
+    void create(@Valid @RequestBody final InventoryRequestPayload dto) {
         service.create(dto);
     }
 }

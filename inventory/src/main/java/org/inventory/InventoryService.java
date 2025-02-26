@@ -16,13 +16,13 @@ class InventoryService {
 
     private final InventoryStore store;
 
-    List<InventoryResponse> all() {
-        final List<InventoryResponse> list = new ArrayList<>();
-        store.findAll().forEach(a -> list.add(new InventoryResponse(a.uuid().toString(), a.name(), a.qty())));
+    List<InventoryResponsePayload> all() {
+        final List<InventoryResponsePayload> list = new ArrayList<>();
+        store.findAll().forEach(a -> list.add(new InventoryResponsePayload(a.uuid().toString(), a.name(), a.qty())));
         return list;
     }
 
-    void create(final InventoryPayload dto) {
+    void create(final InventoryRequestPayload dto) {
         try {
             store.save(new Inventory(UUID.randomUUID(), dto.name().trim(), dto.qty()));
         } catch (final Exception e) {
@@ -30,16 +30,13 @@ class InventoryService {
         }
     }
 
-    InventoryResponse inventoryById(final String productId) {
+    InventoryResponsePayload inventoryById(final String productId) {
         final UUID uuid;
         try {
             uuid = UUID.fromString(productId.trim());
         } catch (final IllegalArgumentException e) {
             throw new BadRequestException();
         }
-
-        return store.inventoryByUUID(uuid)
-                .map(inventory -> new InventoryResponse(inventory.uuid().toString(), inventory.name(), inventory.qty()))
-                .orElseThrow(NotFoundException::new);
+        return store.inventoryByUUID(uuid).map(inv -> new InventoryResponsePayload(inv.uuid().toString(), inv.name(), inv.qty())).orElseThrow(NotFoundException::new);
     }
 }

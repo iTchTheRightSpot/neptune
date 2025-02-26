@@ -1,4 +1,4 @@
-import { IProductModel } from '@product/product.model';
+import { IInventoryModel } from '@pages/inventory/inventory.model';
 
 export interface IOrderModel {
   order_id: string;
@@ -11,7 +11,7 @@ export interface IOrderDetailsModel {
   order_id: string;
   qty: number;
   status: boolean;
-  product: IProductModel;
+  product: IInventoryModel;
 }
 
 export const DummyOrders = (num: number): IOrderModel[] =>

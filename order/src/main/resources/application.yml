@@ -22,7 +22,7 @@ spring:
       schema-locations: classpath*:db/schema.sql
       mode: always
   profiles:
-    active: ${PROFILE:default}
+    active: ${ORDER_PROFILE:default}
   datasource:
     url: ${DB_URL:jdbc:postgresql://localhost:5432/neptune_db?sslmode=disable}
     username: ${DB_USERNAME:neptune}
@@ -31,3 +31,11 @@ spring:
 
 route:
   prefix: api/v1/
+
+grpc:
+  client:
+    local-grpc-server:
+      address: ${GRPC_CLIENT_ADDRESS:static://127.0.0.1:9090}
+      enableKeepAlive: true
+      keepAliveWithoutCalls: true
+      negotiationType: plaintext

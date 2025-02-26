@@ -1,0 +1,24 @@
+include:
+  - ./order/compose.yml
+  - ./inventory/compose.yml
+
+services:
+  gateway:
+    build:
+      context: ./gateway
+      dockerfile: Dockerfile
+    container_name: gateway
+    networks:
+      - api-network
+    env_file:
+      - .env
+    ports:
+      - ${GATEWAY_PORT}:${GATEWAY_PORT}
+    environment:
+      GATEWAY_PORT: ${GATEWAY_PORT}
+      GATEWAY_ORDER_ROUTE: ${GATEWAY_ORDER_ROUTE}
+      GATEWAY_INVENTORY_ROUTE: ${GATEWAY_INVENTORY_ROUTE}
+
+networks:
+  api-network:
+    name: api-network

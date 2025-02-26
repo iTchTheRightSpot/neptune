@@ -10,8 +10,8 @@ import { TableModule } from 'primeng/table';
 import { NewOrderComponent } from './ui/new-order/new-order.component';
 import { OrderDetailsComponent } from './ui/order-details/order-details.component';
 import { Badge } from 'primeng/badge';
-import { ProductService } from '@product/product.service';
-import { IProductModel } from '@product/product.model';
+import { InventoryService } from '@pages/inventory/inventory.service';
+import { IInventoryModel } from '@pages/inventory/inventory.model';
 import { ToastEnum, ToastService } from '@shared/data-access/toast.service';
 
 @Component({
@@ -29,7 +29,7 @@ import { ToastEnum, ToastService } from '@shared/data-access/toast.service';
 })
 export class OrderComponent {
   private readonly service = inject(OrderService);
-  private readonly productService = inject(ProductService);
+  private readonly inventoryService = inject(InventoryService);
   private readonly toast = inject(ToastService);
 
   protected first = 0;
@@ -39,8 +39,8 @@ export class OrderComponent {
   protected toggleNewOrder = false;
   protected toggleOrderDetails = false;
 
-  protected readonly products = toSignal(
-    this.productService.all().pipe(
+  protected readonly inventories = toSignal(
+    this.inventoryService.all().pipe(
       tap(s => {
         if (s.state === ApiState.ERROR)
           this.toast.message({
@@ -50,7 +50,7 @@ export class OrderComponent {
       })
     ),
     {
-      initialValue: <ApiResponse<IProductModel[]>>{
+      initialValue: <ApiResponse<IInventoryModel[]>>{
         state: ApiState.LOADING,
         data: []
       }
@@ -99,7 +99,7 @@ export class OrderComponent {
       tap(s => {
         if (s.state === ApiState.LOADED)
           this.toast.message({
-            message: 'product created',
+            message: 'inventory created',
             state: ToastEnum.SUCCESS
           });
         else if (s.state === ApiState.ERROR)

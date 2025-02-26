@@ -1,0 +1,10 @@
+INVENTORY_PROFILE: e2e
+DB_URL: jdbc:postgresql://localhost:5432/neptune_db?sslmode=disable
+DB_USERNAME: neptune
+DB_PASSWORD: neptune
+
+spring:
+  sql:
+    init:
+      data-locations: classpath*:db/data.sql
+      mode: always
