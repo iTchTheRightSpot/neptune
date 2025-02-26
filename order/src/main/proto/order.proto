@@ -1,8 +1,8 @@
 syntax = "proto3";
 
 option java_multiple_files = true;
-option java_package = "proto.service";
-option java_outer_classname = "OrderServiceProto";
+option java_package = "proto.client";
+option java_outer_classname = "ClientProto";
 option objc_class_prefix = "HLW";
 
 service InventoryService {

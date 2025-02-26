@@ -5,9 +5,9 @@ import org.order.exception.InsertionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import proto.service.InventoryRequest;
-import proto.service.InventoryServiceGrpc;
-import proto.service.OrderRequest;
+import proto.client.InventoryRequest;
+import proto.client.InventoryServiceGrpc;
+import proto.client.OrderRequest;
 
 import java.util.Optional;
 import java.util.UUID;

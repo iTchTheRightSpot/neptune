@@ -5,7 +5,7 @@ import io.grpc.InsecureChannelCredentials;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
-import proto.service.InventoryServiceGrpc;
+import proto.client.InventoryServiceGrpc;
 
 @Configuration
 class InventoryConfig {
