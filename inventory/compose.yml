@@ -1,0 +1,27 @@
+include:
+  - ../compose.yml
+
+services:
+  api:
+    build: .
+    container_name: inventory
+    depends_on:
+      db:
+        condition: service_healthy
+    env_file:
+      - ../.env
+    ports:
+      - ${INVENTORY_PORT}:${INVENTORY_PORT}
+    environment:
+      INVENTORY_PORT: ${INVENTORY_PORT}
+      INVENTORY_PROFILE: ${INVENTORY_PROFILE}
+      DB_URL: ${DB_URL}
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+      GRPC_SERVER_PORT: ${GRPC_SERVER_PORT}
+
+networks:
+  db-network:
+    name: db-network
+  api-network:
+    name: api-network

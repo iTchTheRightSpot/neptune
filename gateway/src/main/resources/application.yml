@@ -1,5 +1,5 @@
 server:
-  port: ${PORT:8080}
+  port: ${GATEWAY_PORT:8080}
 
 spring:
   application:
@@ -10,13 +10,13 @@ spring:
         wiretap: true
       routes:
         - id: order-route
-          uri: ${ORDER_ROUTE:http://localhost:1998}
+          uri: ${GATEWAY_ORDER_ROUTE:http://localhost:1998}
           predicates:
             - Path=/api/v1/order/**
 #          filters:
 #            - PrefixPath=/api/v1
-        - id: INVENTORY-SERVICE
-          uri: ${ORDER_ROUTE:http://localhost:1997}
+        - id: inventory-route
+          uri: ${GATEWAY_INVENTORY_ROUTE:http://localhost:1997}
           predicates:
             - Path=/api/v1/inventory/**
 #          filters:

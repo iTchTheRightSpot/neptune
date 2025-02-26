@@ -24,7 +24,7 @@ jobs:
           java-version: '23'
           cache: 'maven'
 
-      - name: Docker compose up
+      - name: Docker run
         run: |
           docker run --name pg \
           -p 5432:5432 \
@@ -44,10 +44,16 @@ jobs:
           cd order/
           mvn clean test
 
-#      - name: e2e test
-#        run: |
-#          javac main.java
-#          java main.java 8080
-
-      - name: Docker compose down
+      - name: Docker stop
         run: docker stop pg
+
+      - name: Compose up
+        run: docker compose up -d
+
+      - name: e2e test
+        run: |
+          javac main.java
+          java main.java 8080
+
+      - name: Compose down
+        run: docker compose down -v

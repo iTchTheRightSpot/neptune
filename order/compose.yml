@@ -1,0 +1,27 @@
+include:
+  - ../compose.yml
+
+services:
+  api:
+    build: .
+    container_name: order
+    depends_on:
+      db:
+        condition: service_healthy
+    env_file:
+      - ../.env
+    ports:
+      - ${ORDER_PORT}:${ORDER_PORT}
+    environment:
+      ORDER_PORT: ${ORDER_PORT}
+      ORDER_PROFILE: ${ORDER_PROFILE}
+      DB_URL: ${DB_URL}
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+      GRPC_CLIENT_ADDRESS: ${GRPC_CLIENT_ADDRESS}
+
+networks:
+  db-network:
+    name: db-network
+  api-network:
+    name: api-network

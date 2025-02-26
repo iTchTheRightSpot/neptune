@@ -22,7 +22,7 @@ spring:
       schema-locations: classpath*:db/schema.sql
       mode: always
   profiles:
-    active: ${PROFILE:e2e}
+    active: ${INVENTORY_PROFILE:default}
   datasource:
     url: ${DB_URL:jdbc:postgresql://localhost:5432/neptune_db?sslmode=disable}
     username: ${DB_USERNAME:neptune}
