@@ -63,7 +63,7 @@ class OrderHandlerTest {
 
     @Test
     void shouldCreateOrder() throws Exception {
-        final String content = mapper.writeValueAsString(new OrderPayload(UUID.randomUUID().toString(), qty, PENDING));
+        final String content = mapper.writeValueAsString(new OrderRequestPayload(UUID.randomUUID().toString(), qty, PENDING));
         mockmvc.perform(post(prefix).contentType(APPLICATION_JSON).content(content)).andExpect(status().isCreated());
     }
 

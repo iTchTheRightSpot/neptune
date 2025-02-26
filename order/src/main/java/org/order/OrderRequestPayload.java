@@ -8,7 +8,7 @@ import lombok.Builder;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Builder
-record OrderPayload(
+record OrderRequestPayload(
         @JsonProperty("product_id")
         @NotNull
         @NotEmpty
@@ -20,4 +20,4 @@ record OrderPayload(
 ) {
 }
 
-record OrderResponse(@JsonProperty("order_id") String orderId, short qty, OrderStatus status) {}
+record OrderResponsePayload(@JsonProperty("order_id") String orderId, short qty, OrderStatus status) {}

@@ -34,4 +34,4 @@ route:
 
 grpc:
   inventory:
-    port: ${INVENTORY_ORDER_PORT:9090}
+    port: ${GRPC_SERVER_PORT:9090}

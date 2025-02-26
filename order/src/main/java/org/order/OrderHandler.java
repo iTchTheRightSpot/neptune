@@ -19,13 +19,13 @@ class OrderHandler {
 
     @ResponseStatus(OK)
     @GetMapping(produces = APPLICATION_JSON_VALUE)
-    List<OrderResponse> all() {
+    List<OrderResponsePayload> all() {
         return service.all();
     }
 
     @ResponseStatus(CREATED)
     @PostMapping(consumes = APPLICATION_JSON_VALUE)
-    void create(@Valid @RequestBody final OrderPayload dto) {
+    void create(@Valid @RequestBody final OrderRequestPayload dto) {
         service.create(dto);
     }
 }

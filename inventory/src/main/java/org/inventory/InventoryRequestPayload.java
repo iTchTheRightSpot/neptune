@@ -7,7 +7,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-record InventoryPayload(
+record InventoryRequestPayload(
         @NotNull
         @NotEmpty
         @Size.List({@Size(min = 1), @Size(max = 50)})
@@ -16,7 +16,7 @@ record InventoryPayload(
         Short qty
 ) {}
 
-record InventoryResponse(
+record InventoryResponsePayload(
         @JsonProperty("product_id")
         String productId,
         String name,

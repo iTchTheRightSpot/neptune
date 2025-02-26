@@ -59,7 +59,7 @@ final class InventoryHandlerTest extends TestAbstract {
 
     @Test
     void shouldCreateInventory() throws Exception {
-        final String content = mapper.writeValueAsString(new InventoryPayload("uuid", qty));
+        final String content = mapper.writeValueAsString(new InventoryRequestPayload("uuid", qty));
 
         mockmvc.perform(post(prefix).contentType(APPLICATION_JSON).content(content)).andExpect(status().isCreated());
     }

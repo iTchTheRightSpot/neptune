@@ -20,14 +20,14 @@ class OrderService {
     private final OrderStore store;
     private final InventoryService service;
 
-    List<OrderResponse> all() {
-        final List<OrderResponse> list = new ArrayList<>();
-        store.findAll().forEach(a -> list.add(new OrderResponse(a.uuid().toString(), a.qty(), a.status())));
+    List<OrderResponsePayload> all() {
+        final List<OrderResponsePayload> list = new ArrayList<>();
+        store.findAll().forEach(a -> list.add(new OrderResponsePayload(a.uuid().toString(), a.qty(), a.status())));
         return list;
     }
 
     @Transactional(rollbackFor = InsertionException.class)
-    void create(final OrderPayload dto) {
+    void create(final OrderRequestPayload dto) {
         final UUID productId;
         try {
             productId = UUID.fromString(dto.productId().trim());

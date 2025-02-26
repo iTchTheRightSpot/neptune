@@ -1,12 +1,13 @@
 package org.order.inventory;
 
 import lombok.RequiredArgsConstructor;
-import org.inventory.InventoryProto;
-import org.inventory.InventoryServiceGrpc;
 import org.order.exception.InsertionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import proto.service.InventoryRequest;
+import proto.service.InventoryServiceGrpc;
+import proto.service.OrderRequest;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -20,19 +21,20 @@ class InventoryServiceImpl implements InventoryService {
 
     @Override
     public Optional<Inventory> inventoryByUUID(final UUID uuid) {
-        final var req = InventoryProto.InventoryRequest.newBuilder().setProductId(uuid.toString()).build();
+        final var req = InventoryRequest.newBuilder().setProductId(uuid.toString()).build();
         try {
             final var resp = stub.emitInventoryDetail(req);
             return Optional.of(new Inventory(resp.getName(), uuid, (short) resp.getQty()));
         } catch (final RuntimeException e) {
             log.error(e.getMessage(), e);
-            return Optional.empty();
         }
+        return Optional.empty();
+
     }
 
     @Override
     public void deductQty(final UUID productId, final short qty) {
-        final var req = InventoryProto.OrderRequest.newBuilder().setProductId(productId.toString()).setQty(qty).build();
+        final var req = OrderRequest.newBuilder().setProductId(productId.toString()).setQty(qty).build();
         try {
             if (!stub.createOrder(req).getStatus()) throw new InsertionException();
         } catch (RuntimeException e) {

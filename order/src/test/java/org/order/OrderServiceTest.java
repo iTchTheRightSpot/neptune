@@ -39,7 +39,7 @@ final class OrderServiceTest {
     @Test
     void rejectCreation_ThrowNotFound_ProductIdIsNotUUID() {
         // given
-        final var payload = OrderPayload.builder().productId("uuid").build();
+        final var payload = OrderRequestPayload.builder().productId("uuid").build();
 
         // method to test & assert
         assertThatThrownBy(() -> orderService.create(payload)) //
@@ -52,7 +52,7 @@ final class OrderServiceTest {
     @Test
     void rejectCreation_ThrowNotFound_ProductNotFound() {
         // given
-        final var payload = OrderPayload.builder().productId(UUID.randomUUID().toString()).build();
+        final var payload = OrderRequestPayload.builder().productId(UUID.randomUUID().toString()).build();
 
         // when
         when(inventoryService.inventoryByUUID(any(UUID.class))).thenReturn(Optional.empty());
@@ -68,7 +68,7 @@ final class OrderServiceTest {
     @Test
     void rejectCreation_ThrowBadRequest_InventoryLessThanRequestQty() {
         // given
-        final var payload = new OrderPayload(UUID.randomUUID().toString(), (short) 10, CONFIRMED);
+        final var payload = new OrderRequestPayload(UUID.randomUUID().toString(), (short) 10, CONFIRMED);
         final var inventory = Optional.of(Inventory.builder().qty((short) 2).build());
 
         // when
@@ -86,7 +86,7 @@ final class OrderServiceTest {
     void rejectCreation_ThrowInsertion_InventoryOutOfStock() {
         // given
         final short qty = 2;
-        final var payload = new OrderPayload(UUID.randomUUID().toString(), qty, CONFIRMED);
+        final var payload = new OrderRequestPayload(UUID.randomUUID().toString(), qty, CONFIRMED);
         final var inventory = Optional.of(Inventory.builder().qty(qty).build());
 
         // when
@@ -107,7 +107,7 @@ final class OrderServiceTest {
     void success_CreateOrder() {
         // given
         final short qty = 2;
-        final var payload = new OrderPayload(UUID.randomUUID().toString(), qty, CONFIRMED);
+        final var payload = new OrderRequestPayload(UUID.randomUUID().toString(), qty, CONFIRMED);
         final var inventory = Optional.of(Inventory.builder().qty(qty).build());
 
         // when
