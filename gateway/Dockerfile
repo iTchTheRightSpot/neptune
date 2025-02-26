@@ -12,6 +12,6 @@ FROM eclipse-temurin:23
 
 WORKDIR /
 
-COPY --from=build /target/gateway-0.0.1-SNAPSHOT.jar /app.jar
+COPY --from=build /target/gateway.jar /
 
-CMD ["java", "-jar", "/app.jar"]
+CMD ["java", "-jar", "/gateway.jar"]

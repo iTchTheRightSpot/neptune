@@ -10,8 +10,6 @@ services:
       POSTGRES_PASSWORD: neptune
     ports:
       - '5432:5432'
-#    expose:
-#      - ${DB_PORT}
     healthcheck:
       test: ['CMD', 'pg_isready']
       interval: 10s

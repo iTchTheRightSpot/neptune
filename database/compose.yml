@@ -1,16 +1,11 @@
-include:
-  - ./gateway/compos.yml
-  - ./order/compos.yml
-  - ./inventory/compose.yml
-
 services:
-  pg:
+  ci-db:
     image: postgres:15.6
-    container_name: db
+    container_name: ci-db
     env_file:
-      - .env
+      - ../.env
     volumes:
-      - pg-data:/var/lib/postgresql/data
+      - ci-db-data:/var/lib/postgresql/data
     environment:
       POSTGRES_DB: ${DB_NAME}
       POSTGRES_USER: ${DB_USERNAME}
@@ -19,8 +14,6 @@ services:
       - ${DB_PORT}:${DB_PORT}
     networks:
       - db-network
-#    expose:
-#      - ${DB_PORT}
     healthcheck:
       test: ['CMD', 'pg_isready']
       interval: 10s
@@ -32,4 +25,4 @@ networks:
     name: db-network
 
 volumes:
-  pg-data:
+  ci-db-data:

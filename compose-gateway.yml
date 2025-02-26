@@ -1,12 +1,15 @@
 include:
-  - ../compose.yml
+  - ./order/compose.yml
+  - ./inventory/compose.yml
 
 services:
-  api:
-    build: .
+  gateway:
+    build:
+      context: ./gateway
+      dockerfile: Dockerfile
     container_name: gateway
     env_file:
-      - ../.env
+      - .env
     ports:
       - ${GATEWAY_PORT}:${GATEWAY_PORT}
     environment:

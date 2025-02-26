@@ -1,12 +1,12 @@
 include:
-  - ../compose.yml
+  - ../database/compose.yml
 
 services:
-  api:
+  inventory:
     build: .
     container_name: inventory
     depends_on:
-      db:
+      ci-db:
         condition: service_healthy
     env_file:
       - ../.env
