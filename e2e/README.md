@@ -7,7 +7,7 @@ process data as part of the end-to-end flow.
 
 ## Running the Tests
 
-In your terminal run the command
+In your terminal run the command (NOTE: if api gateway port is not 8080, update to accurate port)
 ```bash
-javac main.java && java main.java
+javac main.java && java main.java 8080
 ```

@@ -44,10 +44,10 @@ jobs:
           cd order/
           mvn clean test
 
-      - name: Backend e2e test
+      - name: e2e test
         run: |
           javac main.java
-          java main.java
+          java main.java 8080
 
       - name: Docker compose down
         run: docker stop pg

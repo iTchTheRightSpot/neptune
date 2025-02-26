@@ -5,6 +5,7 @@ import org.order.exception.BadRequestException;
 import org.order.exception.InsertionException;
 import org.order.exception.NotFoundException;
 import org.order.inventory.InventoryService;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,8 +41,10 @@ class OrderService {
         try {
             store.save(new Order(UUID.randomUUID(), productId, dto.qty(), dto.status()));
             service.deductQty(productId, dto.qty());
-        } catch (final Exception e) {
-            throw new InsertionException();
+        } catch (final DataIntegrityViolationException | InsertionException e) {
+            final var message = e instanceof DataIntegrityViolationException
+                    ? "error creating order please check request body" : e.getMessage();
+            throw new InsertionException(message);
         }
     }
 }

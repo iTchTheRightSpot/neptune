@@ -39,6 +39,10 @@ final class InventoryHandlerTest extends TestAbstract {
     void setUp() {
         final var uuid = UUID.randomUUID();
         inventory = store.save(new Inventory(uuid, uuid.toString(), qty));
+        final var uuid1 = UUID.randomUUID();
+        store.save(new Inventory(uuid1, uuid1.toString(), qty));
+        final var uuid2 = UUID.randomUUID();
+        store.save(new Inventory(uuid2, uuid2.toString(), qty));
     }
 
     @Test
