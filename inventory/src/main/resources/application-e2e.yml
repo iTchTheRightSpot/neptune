@@ -8,6 +8,3 @@ spring:
     init:
       data-locations: classpath*:db/data.sql
       mode: always
-  grpc:
-    server:
-      port: ${GRPC_SERVER_PORT:9090}

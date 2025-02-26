@@ -13,4 +13,4 @@
 
 ### Dev docs
 1. [sample spring project GitHub.](https://github.com/spring-projects/spring-petclinic/blob/main/src/main/resources/application-postgres.properties)
-2. [grpc springboot.](https://docs.spring.io/spring-grpc/reference/getting-started.html)
+2. [grpc springboot.](https://github.com/grpc-ecosystem/grpc-spring)

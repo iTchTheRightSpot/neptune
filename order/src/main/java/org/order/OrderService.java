@@ -5,6 +5,8 @@ import org.order.exception.BadRequestException;
 import org.order.exception.InsertionException;
 import org.order.exception.NotFoundException;
 import org.order.inventory.InventoryService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,6 +18,8 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 class OrderService {
+
+    private static final Logger log = LoggerFactory.getLogger(OrderService.class);
 
     private final OrderStore store;
     private final InventoryService service;
@@ -36,12 +40,13 @@ class OrderService {
         }
 
         final var inventory = service.inventoryByUUID(productId).orElseThrow(() -> new NotFoundException("invalid product id"));
-        if (inventory.qty() < dto.qty()) throw new BadRequestException("qty greater than inventory");
+        if (inventory.qty() == 0) throw new BadRequestException("out of stock");
 
         try {
             store.save(new Order(UUID.randomUUID(), productId, dto.qty(), dto.status()));
             service.deductQty(productId, dto.qty());
         } catch (final DataIntegrityViolationException | InsertionException e) {
+            log.error(e.getMessage());
             final var message = e instanceof DataIntegrityViolationException
                     ? "error creating order please check request body" : e.getMessage();
             throw new InsertionException(message);
