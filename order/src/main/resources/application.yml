@@ -36,6 +36,6 @@ grpc:
   client:
     local-grpc-server:
       address: ${GRPC_CLIENT_ADDRESS:static://127.0.0.1:9090}
-      enableKeepAlive: false
-      keepAliveWithoutCalls: false
+      enableKeepAlive: true
+      keepAliveWithoutCalls: true
       negotiationType: plaintext

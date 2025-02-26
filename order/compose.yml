@@ -6,8 +6,11 @@ services:
     build: .
     container_name: order
     depends_on:
-      ci-db:
+      database:
         condition: service_healthy
+    networks:
+      - db-network
+      - api-network
     env_file:
       - ../.env
     ports:

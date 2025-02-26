@@ -1,17 +1,17 @@
 services:
-  ci-db:
+  database:
     image: postgres:15.6
-    container_name: ci-db
+    container_name: database
     env_file:
       - ../.env
     volumes:
-      - ci-db-data:/var/lib/postgresql/data
+      - database-data:/var/lib/postgresql/data
     environment:
       POSTGRES_DB: ${DB_NAME}
       POSTGRES_USER: ${DB_USERNAME}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
     ports:
-      - ${DB_PORT}:${DB_PORT}
+      - ${DB_HOST_PORT}:5432
     networks:
       - db-network
     healthcheck:
@@ -25,4 +25,4 @@ networks:
     name: db-network
 
 volumes:
-  ci-db-data:
+  database-data:

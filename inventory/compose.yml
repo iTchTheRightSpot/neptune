@@ -6,8 +6,11 @@ services:
     build: .
     container_name: inventory
     depends_on:
-      ci-db:
+      database:
         condition: service_healthy
+    networks:
+      - db-network
+      - api-network
     env_file:
       - ../.env
     ports:

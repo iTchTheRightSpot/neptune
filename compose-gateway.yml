@@ -8,6 +8,8 @@ services:
       context: ./gateway
       dockerfile: Dockerfile
     container_name: gateway
+    networks:
+      - api-network
     env_file:
       - .env
     ports:
