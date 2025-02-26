@@ -64,12 +64,6 @@
 			<artifactId>spring-grpc-spring-boot-starter</artifactId>
 		</dependency>
 
-		<!-- grpc client https://grpc-ecosystem.github.io/grpc-spring/en/client/getting-started.html -->
-		<dependency>
-			<groupId>io.grpc</groupId>
-			<artifactId>grpc-services</artifactId>
-		</dependency>
-
 		<!-- 3rd party -->
 		<dependency>
 			<groupId>org.postgresql</groupId>
