@@ -8,8 +8,6 @@ COPY mvnw mvnw
 COPY mvnw.cmd mvnw.cmd
 COPY ./src src/
 
-RUN chmod +x mvnw
-
 RUN mvn clean package -DskipTests
 
 FROM eclipse-temurin:23

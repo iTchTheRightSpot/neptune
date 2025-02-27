@@ -29,9 +29,9 @@ export class NavigationComponent {
       routerLink: `/${RootRoutes.Order}`
     },
     {
-      label: 'Inventory',
+      label: 'Product',
       icon: 'pi pi-shopping-bag',
-      routerLink: `/${RootRoutes.Inventory}`
+      routerLink: `/${RootRoutes.Product}`
     }
   ];
 }

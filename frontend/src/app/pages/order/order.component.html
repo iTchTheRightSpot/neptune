@@ -44,7 +44,7 @@
       <tr
         class="cursor-pointer hover:bg-primary hover:text-primary-contrast"
         (click)="
-          orderdetail.next(order); toggleOrderDetails = !toggleOrderDetails
+          emitOrderDetail.next(order); toggleOrderDetails = !toggleOrderDetails
         "
       >
         <td>{{ order.qty }}</td>
@@ -94,7 +94,7 @@
   [style]="{ width: '40rem' }"
 >
   @defer (when toggleOrderDetails) {
-    <app-order-details [obj]="orderDetailState()" />
+    <app-order-details [obj]="orderDetail()" />
   } @loading {
     loading component
   }
