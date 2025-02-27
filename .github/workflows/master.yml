@@ -20,7 +20,7 @@ jobs:
           java-version: '23'
           cache: 'maven'
 
-      - name: Docker run
+      - name: Start database
         run: |
           docker run --name pg \
           -p 5432:5432 \
@@ -36,7 +36,7 @@ jobs:
       - name: order tests
         run: cd order/ && mvn clean test
 
-      - name: compose down
+      - name: Stop database
         run: docker stop pg
 
   e2e-test:
