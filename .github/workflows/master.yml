@@ -92,4 +92,4 @@ jobs:
         run: cd e2e/ && javac main.java && java main.java 4000
 
       - name: compose down
-        run: docker compose down -v
+        run: docker compose -f compose-gateway.yml down -v
