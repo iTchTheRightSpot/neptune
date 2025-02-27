@@ -10,6 +10,7 @@ This project was generated using [Angular CLI](https://github.com/angular/angula
 ## Pre running application
 
 Install dependencies
+
 ```bash
 npm install
 ```

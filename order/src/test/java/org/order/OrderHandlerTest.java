@@ -57,6 +57,7 @@ class OrderHandlerTest {
                 .andExpect(jsonPath("*").isArray())
                 .andExpect(jsonPath("$[*]", hasSize(1)))
                 .andExpect(jsonPath("$[*].order_id", everyItem(not(emptyOrNullString()))))
+                .andExpect(jsonPath("$[*].product_id", everyItem(not(emptyOrNullString()))))
                 .andExpect(jsonPath("$[*].status", everyItem(not(emptyOrNullString()))))
                 .andExpect(jsonPath("$[*].qty", everyItem(greaterThanOrEqualTo((int) qty))));
     }

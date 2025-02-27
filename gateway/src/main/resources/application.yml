@@ -6,6 +6,15 @@ spring:
     name: gateway
   cloud:
     gateway:
+      globalcors:
+        cors-configurations:
+          '[/**]':
+#            allowedOrigins: 'http://localhost:4200'
+            allowedOrigins: '*' # allow all incase a user changes angular port
+            allowedHeaders: '*'
+            allowedMethods:
+              - GET
+              - POST
       httpclient:
         wiretap: true
       routes:

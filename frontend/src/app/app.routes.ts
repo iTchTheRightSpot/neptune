@@ -14,7 +14,9 @@ export const routes: Routes = [
   {
     path: RootRoutes.Inventory,
     loadComponent: () =>
-      import('@pages/inventory/inventory.component').then(m => m.InventoryComponent)
+      import('@pages/inventory/inventory.component').then(
+        m => m.InventoryComponent
+      )
   },
   { path: '**', redirectTo: `/${RootRoutes.Order}` }
 ];

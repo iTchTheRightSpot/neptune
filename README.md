@@ -19,6 +19,8 @@ communicates between microservices.
 ```bash
 cd frontend && npm i
 ```
+- If using Docker, change `domain: 'http://localhost:8080/api/v1/'` in
+`frontend/src/environments/environment.development.ts` to `domain: 'http://localhost:4000/api/v1/'`.
 - Start the Angular dev server:
 ```bash
 ng serve
@@ -100,7 +102,7 @@ docker compose up -d
 
 - Note: If the containers are running, restart them using the command:
 ```bash
-docker compose restart -d
+docker compose restart
 ```
 - Replace `INVENTORY_PROFILE=default` in `.env` to `INVENTORY_PROFILE=e2e`.
 - Run the command:

@@ -13,13 +13,19 @@ import {
 } from 'rxjs';
 import { ApiResponse, ApiState, err } from '@shared/model/shared.model';
 import { DummyOrders, IOrderDetailsModel, IOrderModel } from './order.model';
-import { DummyInventories, IInventoryModel } from '@pages/inventory/inventory.model';
+import {
+  DummyInventories,
+  IInventoryModel
+} from '@pages/inventory/inventory.model';
+import { ToastEnum, ToastService } from '@shared/data-access/toast.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class OrderService {
   private readonly http = inject(HttpClient);
+  private readonly toast = inject(ToastService);
+
   private readonly ordersCache = new BehaviorSubject<IOrderModel[] | undefined>(
     undefined
   );
@@ -38,7 +44,9 @@ export class OrderService {
 
     return environment.production
       ? this.http
-          .get<IInventoryModel>(`${environment.domain}inventory/${o.product_id}`)
+          .get<IInventoryModel>(
+            `${environment.domain}inventory/${o.product_id}`
+          )
           .pipe(
             map(p => {
               const d: IOrderDetailsModel = {
@@ -56,7 +64,13 @@ export class OrderService {
             startWith(<ApiResponse<IOrderDetailsModel>>{
               state: ApiState.LOADING
             }),
-            catchError(e => of(err<IOrderDetailsModel>(e)))
+            catchError(e => {
+              this.toast.message({
+                message: e.message,
+                state: ToastEnum.ERROR
+              });
+              return of(err<IOrderDetailsModel>(e));
+            })
           )
       : merge(
           of<ApiResponse<IOrderDetailsModel>>({ state: ApiState.LOADING }),
@@ -92,7 +106,13 @@ export class OrderService {
                   startWith(<ApiResponse<IOrderModel[]>>{
                     state: ApiState.LOADING
                   }),
-                  catchError(e => of(err<IOrderModel[]>(e)))
+                  catchError(e => {
+                    this.toast.message({
+                      message: e.message,
+                      state: ToastEnum.ERROR
+                    });
+                    return of(err<IOrderModel[]>(e));
+                  })
                 )
           )
         )
@@ -109,13 +129,23 @@ export class OrderService {
     return environment.production
       ? this.http.post<any>(`${environment.domain}order`, obj).pipe(
           switchMap(() => {
+            this.toast.message({
+              message: 'order created',
+              state: ToastEnum.SUCCESS
+            });
             this.ordersCache.next(undefined);
             return this.all().pipe(
               map(() => <ApiResponse<any>>{ state: ApiState.LOADED })
             );
           }),
           startWith(<ApiResponse<any>>{ state: ApiState.LOADING }),
-          catchError(e => of(err<any>(e)))
+          catchError(e => {
+            this.toast.message({
+              message: e.message,
+              state: ToastEnum.ERROR
+            });
+            return of(err<any>(e));
+          })
         )
       : merge(
           of<ApiResponse<any>>({ state: ApiState.LOADING }),

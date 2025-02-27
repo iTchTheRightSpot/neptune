@@ -20,4 +20,4 @@ record OrderRequestPayload(
 ) {
 }
 
-record OrderResponsePayload(@JsonProperty("order_id") String orderId, short qty, OrderStatus status) {}
+record OrderResponsePayload(@JsonProperty("order_id") String orderId, @JsonProperty("product_id") String productId, short qty, OrderStatus status) {}

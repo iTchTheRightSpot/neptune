@@ -108,11 +108,13 @@ Response:
 [
   {
     "order_id": "6f9f4360-bf97-4c69-947b-2a62a03a700d",
+    "product_id": "6f9f4321-bf97-4c69-947b-2a62a03a700d",
     "qty": 2,
     "status": "CONFIRMED"
   },
   {
     "order_id": "6f2f4360-bf97-4c69-947b-2a62a03a700d",
+    "product_id": "7g2f4360-bf97-4c69-947b-2a62a03a700d",
     "qty": 2,
     "status": "PENDING"
   }

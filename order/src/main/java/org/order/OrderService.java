@@ -26,7 +26,7 @@ class OrderService {
 
     List<OrderResponsePayload> all() {
         final List<OrderResponsePayload> list = new ArrayList<>();
-        store.findAll().forEach(a -> list.add(new OrderResponsePayload(a.uuid().toString(), a.qty(), a.status())));
+        store.findAll().forEach(a -> list.add(new OrderResponsePayload(a.uuid().toString(), a.productId().toString(), a.qty(), a.status())));
         return list;
     }
 

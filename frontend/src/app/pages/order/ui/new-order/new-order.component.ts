@@ -7,7 +7,7 @@ import {
   output
 } from '@angular/core';
 import { ApiResponse, ApiState } from '@shared/model/shared.model';
-import { IOrderModel } from '@order/order.model';
+import { IOrderModel, OrderStatus } from '@order/order.model';
 import { Select } from 'primeng/select';
 import { IInventoryModel } from '@pages/inventory/inventory.model';
 import {
@@ -32,10 +32,13 @@ export class NewOrderComponent {
   readonly emitter = output<IOrderModel>();
 
   protected readonly state = ApiState;
+  protected readonly orderstatus = OrderStatus;
   protected form = inject(FormBuilder).group({
-    product: new FormControl<IInventoryModel | null>(null, [Validators.required]),
+    product: new FormControl<IInventoryModel | null>(null, [
+      Validators.required
+    ]),
     qty: new FormControl<number | null>(null, [Validators.required]),
-    status: new FormControl<boolean | null>(null, [Validators.required])
+    status: new FormControl<OrderStatus | null>(null, [Validators.required])
   });
 
   protected readonly submit = () =>
@@ -45,6 +48,6 @@ export class NewOrderComponent {
           order_id: '',
           product_id: this.form.value.product?.product_id || '',
           qty: Number(this.form.value.qty!!),
-          status: this.form.value.status || false
+          status: this.form.value.status!!
         });
 }

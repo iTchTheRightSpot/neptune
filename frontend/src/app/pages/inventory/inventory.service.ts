@@ -13,12 +13,15 @@ import {
   switchMap
 } from 'rxjs';
 import { environment } from '@env/environment';
+import { ToastEnum, ToastService } from '@shared/data-access/toast.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class InventoryService {
   private readonly http = inject(HttpClient);
+  private readonly toast = inject(ToastService);
+
   private readonly inventoryCache = new BehaviorSubject<
     IInventoryModel[] | undefined
   >(undefined);
@@ -45,7 +48,13 @@ export class InventoryService {
                     startWith(<ApiResponse<IInventoryModel[]>>{
                       state: ApiState.LOADING
                     }),
-                    catchError(e => of(err<IInventoryModel[]>(e)))
+                    catchError(e => {
+                      this.toast.message({
+                        message: e.message,
+                        state: ToastEnum.ERROR
+                      });
+                      return of(err<IInventoryModel[]>(e));
+                    })
                   )
           )
         )
@@ -62,13 +71,23 @@ export class InventoryService {
     return environment.production
       ? this.http.post<any>(`${environment.domain}inventory`, obj).pipe(
           switchMap(() => {
+            this.toast.message({
+              message: 'inventory created',
+              state: ToastEnum.SUCCESS
+            });
             this.inventoryCache.next(undefined);
             return this.all().pipe(
               map(() => <ApiResponse<any>>{ state: ApiState.LOADED })
             );
           }),
           startWith(<ApiResponse<any>>{ state: ApiState.LOADING }),
-          catchError(e => of(err<any>(e)))
+          catchError(e => {
+            this.toast.message({
+              message: e.message,
+              state: ToastEnum.ERROR
+            });
+            return of(err<any>(e));
+          })
         )
       : merge(
           of<ApiResponse<any>>({ state: ApiState.LOADING }),
