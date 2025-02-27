@@ -24,7 +24,7 @@ Response:
 
 ### GET INVENTORIES
 
-Retrieves all the inventory
+Retrieves all the inventories
 
 **Endpoint:** /api/v1/inventory/all
 

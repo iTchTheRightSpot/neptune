@@ -82,7 +82,7 @@ cd e2e/ && javac main.java && java main.java 8080
 ```bash
 touch .env
 echo DB_NAME=neptune_db >> .env
-echo DB_HOST_PORT=5431 >> .env
+echo DB_HOST_PORT=5432 >> .env
 echo DB_URL='jdbc:postgresql://database:5432/neptune_db?sslmode=disable' >> .env
 echo DB_USERNAME=neptune >> .env
 echo DB_PASSWORD=neptune >> .env

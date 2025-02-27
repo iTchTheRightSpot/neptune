@@ -1,11 +1,14 @@
 name: Build & Test
 on:
+  push:
+    branches:
+      - master
   pull_request:
     branches:
       - master
 
 jobs:
-  individual-test:
+  module-test:
     name: order and inventory modules test
     runs-on: ubuntu-latest
 
@@ -58,7 +61,7 @@ jobs:
         run: |
           touch .env
           echo DB_NAME=neptune_db >> .env
-          echo DB_HOST_PORT=5431 >> .env
+          echo DB_HOST_PORT=5432 >> .env
           echo DB_URL='jdbc:postgresql://database:5432/neptune_db?sslmode=disable' >> .env
           echo DB_USERNAME=neptune >> .env
           echo DB_PASSWORD=neptune >> .env
