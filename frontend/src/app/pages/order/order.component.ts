@@ -52,9 +52,9 @@ export class OrderComponent {
     }
   );
 
-  protected readonly orderdetail = new Subject<IOrderModel>();
-  protected readonly orderDetailState = toSignal(
-    this.orderdetail
+  protected readonly emitOrderDetail = new Subject<IOrderModel>();
+  protected readonly orderDetail = toSignal(
+    this.emitOrderDetail
       .asObservable()
       .pipe(switchMap(o => this.service.orderdetail(o))),
     {

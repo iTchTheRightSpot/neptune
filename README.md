@@ -14,6 +14,11 @@ communicates between microservices.
 
 ## Getting Started
 
+- Clone
+```bash
+git clone https://github.com/iTchTheRightSpot/neptune.git && cd neptune
+```
+
 ### Frontend
 - Navigate to the `frontend` directory and install required dependencies:
 ```bash
@@ -46,6 +51,8 @@ cd order && mvn clean spring-boot:run
 ```bash
 cd inventory && mvn clean spring-boot:run
 ```
+
+- You can interact with the API via the [API routes documentation](./API.md)
 
 ### Run tests
 **NOTE:** Restart services if they are running when testing.
