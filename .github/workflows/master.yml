@@ -84,13 +84,12 @@ jobs:
         run: docker compose -f compose-gateway.yml up -d
 
       - name: containers states
-        run: docker ps
+        run: |
+          sleep 10s
+          docker ps
 
       - name: e2e test
-        run: |
-          cd e2e/
-          javac main.java
-          java main.java 4000
+        run: cd e2e/ && javac main.java && java main.java 4000
 
       - name: compose down
         run: docker compose down -v
