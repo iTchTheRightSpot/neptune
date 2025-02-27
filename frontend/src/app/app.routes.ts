@@ -2,7 +2,7 @@ import { Routes } from '@angular/router';
 
 export const RootRoutes = {
   Order: '',
-  Product: 'product'
+  Inventory: 'inventory'
 };
 
 export const routes: Routes = [
@@ -12,9 +12,11 @@ export const routes: Routes = [
       import('./pages/order/order.component').then(m => m.OrderComponent)
   },
   {
-    path: RootRoutes.Product,
+    path: RootRoutes.Inventory,
     loadComponent: () =>
-      import('./pages/product/product.component').then(m => m.ProductComponent)
+      import('@pages/inventory/inventory.component').then(
+        m => m.InventoryComponent
+      )
   },
   { path: '**', redirectTo: `/${RootRoutes.Order}` }
 ];

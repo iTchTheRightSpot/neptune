@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "proto.client";
+option java_outer_classname = "ClientProto";
+option objc_class_prefix = "HLW";
+
+service InventoryService {
+  rpc EmitInventoryDetail(InventoryRequest) returns (InventoryResponse);
+  rpc CreateOrder(OrderRequest) returns (OrderResponse);
+}
+
+message InventoryRequest {
+  string productId = 1;
+}
+
+message InventoryResponse {
+  string productId = 1;
+  string name = 2;
+  int32 qty = 3;
+}
+
+message OrderRequest {
+  string productId = 1;
+  int32 qty = 2;
+}
+
+message OrderResponse {
+  bool status = 1;
+}

@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ApiResponse, ApiState, err } from '@shared/model/shared.model';
-import { DummyProducts, IProductModel } from './product.model';
+import { DummyInventories, IInventoryModel } from './inventory.model';
 import {
   BehaviorSubject,
   catchError,
@@ -13,62 +13,81 @@ import {
   switchMap
 } from 'rxjs';
 import { environment } from '@env/environment';
+import { ToastEnum, ToastService } from '@shared/data-access/toast.service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class ProductService {
+export class InventoryService {
   private readonly http = inject(HttpClient);
-  private readonly productCache = new BehaviorSubject<
-    IProductModel[] | undefined
+  private readonly toast = inject(ToastService);
+
+  private readonly inventoryCache = new BehaviorSubject<
+    IInventoryModel[] | undefined
   >(undefined);
 
   readonly all = () =>
     environment.production
-      ? this.productCache.pipe(
+      ? this.inventoryCache.pipe(
           switchMap(u =>
             u !== undefined
-              ? of<ApiResponse<IProductModel[]>>({
+              ? of<ApiResponse<IInventoryModel[]>>({
                   state: ApiState.LOADED,
                   data: u
                 })
               : this.http
-                  .get<IProductModel[]>(`${environment.domain}product/all`)
+                  .get<IInventoryModel[]>(`${environment.domain}inventory/all`)
                   .pipe(
                     map(
                       a =>
-                        <ApiResponse<IProductModel[]>>{
+                        <ApiResponse<IInventoryModel[]>>{
                           state: ApiState.LOADED,
                           data: a
                         }
                     ),
-                    startWith(<ApiResponse<IProductModel[]>>{
+                    startWith(<ApiResponse<IInventoryModel[]>>{
                       state: ApiState.LOADING
                     }),
-                    catchError(e => of(err<IProductModel[]>(e)))
+                    catchError(e => {
+                      this.toast.message({
+                        message: e.message,
+                        state: ToastEnum.ERROR
+                      });
+                      return of(err<IInventoryModel[]>(e));
+                    })
                   )
           )
         )
       : merge(
-          of<ApiResponse<IProductModel[]>>({ state: ApiState.LOADING }),
-          of<ApiResponse<IProductModel[]>>({
+          of<ApiResponse<IInventoryModel[]>>({ state: ApiState.LOADING }),
+          of<ApiResponse<IInventoryModel[]>>({
             state: ApiState.LOADED,
-            data: DummyProducts(20)
+            data: DummyInventories(20)
           }).pipe(delay(2000))
         );
 
-  readonly create = (p: IProductModel) => {
+  readonly create = (p: IInventoryModel) => {
     const { product_id, ...obj } = p;
     return environment.production
-      ? this.http.post<any>(`${environment.domain}product`, obj).pipe(
+      ? this.http.post<any>(`${environment.domain}inventory`, obj).pipe(
           switchMap(() => {
-            this.productCache.next(undefined);
+            this.toast.message({
+              message: 'inventory created',
+              state: ToastEnum.SUCCESS
+            });
+            this.inventoryCache.next(undefined);
             return this.all().pipe(
               map(() => <ApiResponse<any>>{ state: ApiState.LOADED })
             );
           }),
           startWith(<ApiResponse<any>>{ state: ApiState.LOADING }),
-          catchError(e => of(err<any>(e)))
+          catchError(e => {
+            this.toast.message({
+              message: e.message,
+              state: ToastEnum.ERROR
+            });
+            return of(err<any>(e));
+          })
         )
       : merge(
           of<ApiResponse<any>>({ state: ApiState.LOADING }),

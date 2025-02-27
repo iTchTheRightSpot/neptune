@@ -43,8 +43,8 @@
         appendTo="body"
         formControlName="status"
         id="status"
-        placeholder="select a product"
-        [options]="[true, false]"
+        placeholder="select a status"
+        [options]="[orderstatus.CONFIRMED, orderstatus.PENDING]"
         class="w-full"
       />
     </div>

@@ -7,6 +7,14 @@ This project was generated using [Angular CLI](https://github.com/angular/angula
 1. PrimeNG.
 2. Tailwind.
 
+## Pre running application
+
+Install dependencies
+
+```bash
+npm install
+```
+
 ## Development server
 
 To start a local development server, run:

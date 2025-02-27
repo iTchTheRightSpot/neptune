@@ -1,0 +1,32 @@
+server:
+  port: ${GATEWAY_PORT:8080}
+
+spring:
+  application:
+    name: gateway
+  cloud:
+    gateway:
+      globalcors:
+        cors-configurations:
+          '[/**]':
+#            allowedOrigins: 'http://localhost:4200'
+            allowedOrigins: '*' # allow all incase a user changes angular port
+            allowedHeaders: '*'
+            allowedMethods:
+              - GET
+              - POST
+      httpclient:
+        wiretap: true
+      routes:
+        - id: order-route
+          uri: ${GATEWAY_ORDER_ROUTE:http://localhost:1998}
+          predicates:
+            - Path=/api/v1/order/**
+#          filters:
+#            - PrefixPath=/api/v1
+        - id: inventory-route
+          uri: ${GATEWAY_INVENTORY_ROUTE:http://localhost:1997}
+          predicates:
+            - Path=/api/v1/inventory/**
+#          filters:
+#            - PrefixPath=/api/v1

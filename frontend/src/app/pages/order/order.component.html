@@ -40,18 +40,20 @@
         }
       </tr>
     </ng-template>
-    <ng-template #body let-model>
+    <ng-template #body let-order>
       <tr
         class="cursor-pointer hover:bg-primary hover:text-primary-contrast"
         (click)="
-          orderdetail.next(model); toggleOrderDetails = !toggleOrderDetails
+          orderdetail.next(order); toggleOrderDetails = !toggleOrderDetails
         "
       >
-        <td>{{ model.qty }}</td>
+        <td>{{ order.qty }}</td>
         <td>
           <p-badge
-            [value]="model.status"
-            [severity]="model.status ? 'success' : 'danger'"
+            [value]="order.status"
+            [severity]="
+              order.status === orderstatus.CONFIRMED ? 'success' : 'warn'
+            "
           />
         </td>
       </tr>
@@ -75,11 +77,13 @@
 >
   @defer (when toggleNewOrder) {
     <app-new-order
-      [products]="products()"
+      [products]="inventories()"
       [loading]="createState().state"
       [(visible)]="toggleNewOrder"
       (emitter)="create.next($event)"
     />
+  } @loading {
+    loading component
   }
 </p-dialog>
 
@@ -91,5 +95,7 @@
 >
   @defer (when toggleOrderDetails) {
     <app-order-details [obj]="orderDetailState()" />
+  } @loading {
+    loading component
   }
 </p-dialog>
