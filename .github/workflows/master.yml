@@ -10,7 +10,7 @@ on:
 
 jobs:
   individual-test:
-    name: Test order and inventory modules separately
+    name: order and inventory modules test
     runs-on: ubuntu-latest
 
     steps:
