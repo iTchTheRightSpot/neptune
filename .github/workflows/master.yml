@@ -1,4 +1,4 @@
-name: Test & Build
+name: Build & Test
 on:
   push:
     branches:
@@ -9,8 +9,46 @@ on:
       - backend
 
 jobs:
-  test:
-    name: Build and Test
+  individual-test:
+    name: Test order and inventory modules separately
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: checkout source code
+        uses: actions/checkout@v4
+
+      - name: set up JDK Temurin
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '23'
+          cache: 'maven'
+
+      - name: Docker run
+        run: |
+          docker run --name pg \
+          -p 5432:5432 \
+          --expose 5432 \
+          -e POSTGRES_DB=neptune_db \
+          -e POSTGRES_USER=neptune \
+          -e POSTGRES_PASSWORD=neptune \
+          -d postgres:15.6
+
+      - name: inventory tests
+        run: |
+          cd inventory/
+          mvn clean test
+
+      - name: order tests
+        run: |
+          cd order/
+          mvn clean test
+
+      - name: compose down
+        run: docker stop pg
+
+  e2e-test:
+    name: e2e test
     runs-on: ubuntu-latest
 
     steps:
@@ -28,7 +66,7 @@ jobs:
         run: |
           touch .env
           echo DB_NAME=neptune_db >> .env
-          echo DB_HOST_PORT=5432 >> .env
+          echo DB_HOST_PORT=5431 >> .env
           echo DB_URL='jdbc:postgresql://database:5432/neptune_db?sslmode=disable' >> .env
           echo DB_USERNAME=neptune >> .env
           echo DB_PASSWORD=neptune >> .env
@@ -45,20 +83,7 @@ jobs:
       - name: compose up
         run: docker compose -f compose-gateway.yml up -d
 
-      - name: containers state before local tests
-        run: docker ps
-
-      - name: inventory tests
-        run: |
-          cd inventory/
-          mvn clean test
-
-      - name: order tests
-        run: |
-          cd order/
-          mvn clean test
-
-      - name: containers state after local tests
+      - name: containers states
         run: docker ps
 
       - name: e2e test
