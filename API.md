@@ -6,7 +6,7 @@
 
 Creates a new Inventory.
 
-**Endpoint:** /api/v1/auth/register
+**Endpoint:** /api/v1/inventory
 
 **Request Body:**
 
