@@ -1,4 +1,4 @@
-name: Test & Build
+name: Build & Test
 on:
   push:
     branches:
@@ -9,15 +9,15 @@ on:
       - backend
 
 jobs:
-  test:
-    name: Build and Test
+  individual-test:
+    name: order and inventory modules test
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout source code
+      - name: checkout source code
         uses: actions/checkout@v4
 
-      - name: Set up JDK Temurin
+      - name: set up JDK Temurin
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
@@ -34,30 +34,62 @@ jobs:
           -e POSTGRES_PASSWORD=neptune \
           -d postgres:15.6
 
-      - name: Inventory tests
+      - name: inventory tests
         run: |
           cd inventory/
           mvn clean test
 
-      - name: Order tests
+      - name: order tests
         run: |
           cd order/
           mvn clean test
 
-      - name: Docker stop
+      - name: compose down
         run: docker stop pg
 
-      - name: Create .env
-        run: |
-          echo -e "DB_NAME=neptune_db\nDB_HOST_PORT=5431\nDB_URL='jdbc:postgresql://database:5432/neptune_db?sslmode=disable'\nDB_USERNAME=neptune\nDB_PASSWORD=neptune\n\n# gateway\nGATEWAY_PORT=8080\nGATEWAY_ORDER_ROUTE=http://order:1998\nGATEWAY_INVENTORY_ROUTE=http://inventory:1997\n\n# order\nORDER_PORT=1998\nORDER_PROFILE=default\nGRPC_CLIENT_ADDRESS=inventory:9090\n\n# inventory\nINVENTORY_PORT=1997\nINVENTORY_PROFILE=e2e\nGRPC_SERVER_PORT=9090" > .env
+  e2e-test:
+    name: e2e test
+    runs-on: ubuntu-latest
 
-      - name: Compose up
+    steps:
+      - name: checkout source code
+        uses: actions/checkout@v4
+
+      - name: set up JDK Temurin
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '23'
+          cache: 'maven'
+
+      - name: create .env
+        run: |
+          touch .env
+          echo DB_NAME=neptune_db >> .env
+          echo DB_HOST_PORT=5431 >> .env
+          echo DB_URL='jdbc:postgresql://database:5432/neptune_db?sslmode=disable' >> .env
+          echo DB_USERNAME=neptune >> .env
+          echo DB_PASSWORD=neptune >> .env
+          echo GATEWAY_PORT=4000 >> .env
+          echo GATEWAY_ORDER_ROUTE=http://order:4002 >> .env
+          echo GATEWAY_INVENTORY_ROUTE=http://inventory:4003 >> .env
+          echo ORDER_PORT=4002 >> .env
+          echo ORDER_PROFILE=default >> .env
+          echo INVENTORY_CLIENT_ADDRESS=static://inventory:4005 >> .env
+          echo INVENTORY_PORT=4003 >> .env
+          echo INVENTORY_PROFILE=e2e >> .env
+          echo INVENTORY_GRPC_SERVER_PORT=4005 >> .env
+
+      - name: compose up
         run: docker compose -f compose-gateway.yml up -d
 
-      - name: e2e test
+      - name: containers states
         run: |
-          javac main.java
-          java main.java 8080
+          sleep 10s
+          docker ps
 
-      - name: Compose down
-        run: docker compose down -v
+      - name: e2e test
+        run: cd e2e/ && javac main.java && java main.java 4000
+
+      - name: compose down
+        run: docker compose -f compose-gateway.yml down -v

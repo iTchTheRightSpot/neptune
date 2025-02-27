@@ -16,8 +16,12 @@ import java.util.UUID;
 class InventoryServiceImpl implements InventoryService {
     private static final Logger log = LoggerFactory.getLogger(InventoryServiceImpl.class);
 
-    @GrpcClient("local-grpc-server")
     private InventoryServiceGrpc.InventoryServiceBlockingStub stub;
+
+    @GrpcClient("inventory-server")
+    public void setStub(final InventoryServiceGrpc.InventoryServiceBlockingStub stub) {
+        this.stub = stub;
+    }
 
     @Override
     public Optional<Inventory> inventoryByUUID(final UUID uuid) {

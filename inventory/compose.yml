@@ -21,7 +21,7 @@ services:
       DB_URL: ${DB_URL}
       DB_USERNAME: ${DB_USERNAME}
       DB_PASSWORD: ${DB_PASSWORD}
-      GRPC_SERVER_PORT: ${GRPC_SERVER_PORT}
+      INVENTORY_GRPC_SERVER_PORT: ${INVENTORY_GRPC_SERVER_PORT}
 
 networks:
   db-network:
