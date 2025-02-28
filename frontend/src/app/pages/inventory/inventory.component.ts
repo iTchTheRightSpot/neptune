@@ -24,6 +24,7 @@ export class InventoryComponent {
   protected readonly thead = ['Name', 'Quantity'];
   protected toggleNewProduct = false;
 
+  // retrieves all inventories/products in the database
   protected readonly inventories = toSignal(this.service.all().pipe(), {
     initialValue: <ApiResponse<IInventoryModel[]>>{
       state: ApiState.LOADING,
@@ -31,7 +32,10 @@ export class InventoryComponent {
     }
   });
 
+  // emits an api call to create a new Product/Inventory
   protected readonly create = new Subject<IInventoryModel>();
+
+  // a signal that holds the state of the API call for creating a new Product or Inventory.
   protected readonly createState = toSignal(
     this.create.asObservable().pipe(switchMap(o => this.service.create(o))),
     { initialValue: <ApiResponse<any>>{ state: ApiState.LOADED } }

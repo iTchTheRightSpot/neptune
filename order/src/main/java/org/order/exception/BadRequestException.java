@@ -1,11 +1,9 @@
 package org.order.exception;
 
-public class BadRequestException extends RuntimeException {
-    public BadRequestException() {
-        super("bad request");
-    }
+import org.springframework.http.HttpStatus;
 
+public final class BadRequestException extends AbstractException {
     public BadRequestException(final String message) {
-        super(message);
+        super(HttpStatus.BAD_REQUEST, message);
     }
 }

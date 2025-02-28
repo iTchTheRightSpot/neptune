@@ -30,7 +30,7 @@ class InventoryServiceImpl implements InventoryService {
             final var resp = stub.emitInventoryDetail(req);
             return Optional.of(new Inventory(resp.getName(), uuid, (short) resp.getQty()));
         } catch (final RuntimeException e) {
-            log.error(e.getMessage(), e);
+            log.error(e.getMessage());
             return Optional.empty();
         }
     }

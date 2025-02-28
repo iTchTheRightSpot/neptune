@@ -26,16 +26,17 @@ export class OrderService {
   private readonly http = inject(HttpClient);
   private readonly toast = inject(ToastService);
 
-  private readonly ordersCache = new BehaviorSubject<IOrderModel[] | undefined>(
+  private readonly allOrdersCache = new BehaviorSubject<IOrderModel[] | undefined>(
     undefined
   );
-  private readonly orderDetailCache: {
+  private readonly allOrderDetailsCache: {
     key: string;
     data: IOrderDetailsModel;
   }[] = [];
 
+  // api call to retrieve details about an order
   readonly orderdetail = (o: IOrderModel) => {
-    const find = this.orderDetailCache.find(obj => obj.key === o.product_id);
+    const find = this.allOrderDetailsCache.find(obj => obj.key === o.product_id);
     if (find)
       return of<ApiResponse<IOrderDetailsModel>>({
         state: ApiState.LOADED,
@@ -55,7 +56,7 @@ export class OrderService {
                 qty: o.qty,
                 product: p
               };
-              this.orderDetailCache.push({ key: o.product_id, data: d });
+              this.allOrderDetailsCache.push({ key: o.product_id, data: d });
               return <ApiResponse<IOrderDetailsModel>>{
                 state: ApiState.LOADED,
                 data: d
@@ -88,7 +89,7 @@ export class OrderService {
 
   readonly all = () =>
     environment.production
-      ? this.ordersCache.pipe(
+      ? this.allOrdersCache.pipe(
           switchMap(e =>
             e !== undefined
               ? of<ApiResponse<IOrderModel[]>>({
@@ -133,7 +134,7 @@ export class OrderService {
               message: 'order created',
               state: ToastEnum.SUCCESS
             });
-            this.ordersCache.next(undefined);
+            this.allOrdersCache.next(undefined);
             return this.all().pipe(
               map(() => <ApiResponse<any>>{ state: ApiState.LOADED })
             );

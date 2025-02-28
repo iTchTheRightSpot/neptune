@@ -1,7 +1,9 @@
 package org.inventory.exception;
 
-public class BadRequestException extends RuntimeException {
+import org.springframework.http.HttpStatus;
+
+public final class BadRequestException extends AbstractException {
     public BadRequestException() {
-        super("bad request");
+        super(HttpStatus.BAD_REQUEST, "bad request");
     }
 }
