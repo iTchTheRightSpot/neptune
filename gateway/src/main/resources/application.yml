@@ -11,7 +11,9 @@ spring:
           '[/**]':
 #            allowedOrigins: 'http://localhost:4200'
             allowedOrigins: '*' # allow all incase a user changes angular port
-            allowedHeaders: '*'
+            allowedHeaders:
+#              - '*' only allow what the backend needs
+              - 'Content-Type'
             allowedMethods:
               - GET
               - POST

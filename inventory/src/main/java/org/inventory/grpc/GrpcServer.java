@@ -31,7 +31,7 @@ class GrpcServer extends InventoryServiceGrpc.InventoryServiceImplBase {
     private final InventoryStore store;
     private final TransactionTemplate template;
 
-    private static final BiFunction<InventoryStore, String, Inventory> inventoryById = (store, productId) -> {
+    private static final BiFunction<InventoryStore, String, Inventory> inventoryByUUID = (store, productId) -> {
         final UUID uuid;
         try {
             uuid = UUID.fromString(productId.trim());
@@ -41,10 +41,12 @@ class GrpcServer extends InventoryServiceGrpc.InventoryServiceImplBase {
         return store.inventoryByUUID(uuid).orElseThrow(NotFoundException::new);
     };
 
+
+    /** Emits the details for a specific {@link Inventory} based on the provided UUID. */
     @Override
     public void emitInventoryDetail(InventoryRequest req, StreamObserver<InventoryResponse> emit) {
         try {
-            final var inventory = inventoryById.apply(store, req.getProductId().trim());
+            final var inventory = inventoryByUUID.apply(store, req.getProductId().trim());
             final var build = InventoryResponse.newBuilder()
                     .setProductId(req.getProductId().trim())
                     .setName(inventory.name().trim())
@@ -64,18 +66,19 @@ class GrpcServer extends InventoryServiceGrpc.InventoryServiceImplBase {
 
     @Override
     public void createOrder(OrderRequest req, StreamObserver<OrderResponse> emit) {
+        // manually handling transaction due to metadata WARNING
         template.execute(new TransactionCallbackWithoutResult() {
             protected void doInTransactionWithoutResult(TransactionStatus txstatus) {
                 try {
-                    final var inventory = inventoryById.apply(store, req.getProductId().trim());
+                    final var inventory = inventoryByUUID.apply(store, req.getProductId().trim());
                     final short qty = (short) (inventory.qty() - (short) req.getQty());
                     store.updateQty(inventory.inventoryId(), qty);
+
+                    txstatus.flush();
 
                     // emit response to client
                     emit.onNext(OrderResponse.newBuilder().setStatus(true).build());
                     emit.onCompleted();
-
-                    txstatus.flush();
                 } catch (final BadRequestException | NotFoundException | DataIntegrityViolationException e) {
                     log.error("error creating order {}", e.getMessage());
                     txstatus.setRollbackOnly();

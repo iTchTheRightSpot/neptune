@@ -1,7 +1,9 @@
 package org.inventory.exception;
 
-public class InsertionException extends RuntimeException {
+import org.springframework.http.HttpStatus;
+
+public final class InsertionException extends AbstractException {
     public InsertionException() {
-        super("error saving insertion");
+        super(HttpStatus.CONFLICT, "error saving insertion");
     }
 }

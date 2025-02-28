@@ -1,7 +1,9 @@
 package org.inventory.exception;
 
-public class NotFoundException extends RuntimeException {
+import org.springframework.http.HttpStatus;
+
+public final class NotFoundException extends AbstractException {
     public NotFoundException() {
-        super("Not found");
+        super(HttpStatus.NOT_FOUND, "Not found");
     }
 }
