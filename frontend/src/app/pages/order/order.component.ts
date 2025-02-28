@@ -42,6 +42,7 @@ export class OrderComponent {
   protected toggleNewOrder = false;
   protected toggleOrderDetails = false;
 
+  // retrieve all the products/inventories in the database
   protected readonly inventories = toSignal(
     this.inventoryService.all().pipe(),
     {
@@ -52,7 +53,9 @@ export class OrderComponent {
     }
   );
 
+  // emits an api call to retrieve the details about an Order
   protected readonly emitOrderDetail = new Subject<IOrderModel>();
+  // holds the response state of the emitted api call to retrieve the details about an Order
   protected readonly orderDetail = toSignal(
     this.emitOrderDetail
       .asObservable()
@@ -62,6 +65,7 @@ export class OrderComponent {
     }
   );
 
+  // retrieves all orders saved to the database
   protected readonly orders = toSignal(this.service.all().pipe(), {
     initialValue: <ApiResponse<IOrderModel[]>>{
       state: ApiState.LOADING,
@@ -69,7 +73,9 @@ export class OrderComponent {
     }
   });
 
+  // emits an api call to create an Order
   protected readonly create = new Subject<IOrderModel>();
+  // holds the response state of the emitted api call to create an Order
   protected readonly createState = toSignal(
     this.create.asObservable().pipe(switchMap(o => this.service.create(o))),
     { initialValue: <ApiResponse<any>>{ state: ApiState.LOADED } }

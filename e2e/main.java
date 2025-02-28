@@ -81,7 +81,7 @@ class Main {
 
     public static void main(final String[] args) throws IOException, InterruptedException {
         log.log(Level.INFO, "beginning e2e test");
-        for (final Obj obj : tests.apply(args != null && args.length > 0 ? args[0] : "4000")) {
+        for (final Obj obj : tests.apply(args != null && args.length > 0 ? args[0] : "8080")) {
             final var response = client.send(obj.request, HttpResponse.BodyHandlers.ofString());
 
             if (response.statusCode() != obj.status) {
